@@ -9,53 +9,27 @@ const { title, description } = Astro.props;
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content={description} />
   <title>{title}</title>
-
-  <!-- Favicons -->
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-
-  <!-- Open Graph -->
+  <link rel="icon" href="/voglia-di-pizza/favicon.svg" type="image/svg+xml" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="it_IT" />
-
-  <!-- Schema.org -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Voglia di Pizza",
     "applicationCategory": "BusinessApplication",
-    "description": "Sistema di ordinazione online per pizzerie. Sito web professionale con ordini WhatsApp, menu digitale e dashboard.",
+    "description": "Sistema di ordinazione online per pizzerie italiane.",
     "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "EUR",
-      "description": "Prova gratuita 7 giorni"
-    }
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
   })} />
-
-  <!-- Styles -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
   <slot />
-
-  <!-- Smooth reveal observer -->
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
 </body>
 </html>

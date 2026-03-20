@@ -5,767 +5,412 @@ import { STYLES } from '../data/styles';
 ---
 
 <BaseLayout
-  title="Voglia di Pizza — Il sito web per la tua pizzeria. Ordini online in 24 ore."
-  description="Sistema di ordinazione online per pizzerie. Menu digitale, ordini WhatsApp, dashboard ordini. Sito web professionale pronto in 24 ore."
+  title="Voglia di Pizza — Il sito per la tua pizzeria"
+  description="Sistema di ordinazione online per pizzerie. Menu digitale, ordini WhatsApp, dashboard. Pronto in 24 ore."
 >
 
-<!-- ═══════════ NAV ═══════════ -->
-<nav class="topbar">
-  <div class="wrap topbar-in">
-    <a href="/" class="topbar-brand">Voglia di Pizza</a>
-    <div class="topbar-links">
-      <a href="#come-funziona">Come funziona</a>
-      <a href="#inizia" class="btn btn-primary" style="padding:0.6rem 1.4rem; font-size:0.82rem;">Inizia</a>
-    </div>
-  </div>
-</nav>
+<form id="F" enctype="multipart/form-data">
+<div class="track" id="track">
 
-<!-- ═══════════ HERO ═══════════ -->
-<section class="hero">
-  <div class="wrap hero-in">
-    <p class="hero-eyebrow rv">Sistema ordini per pizzerie</p>
-    <h1 class="hero-h rv rv-d1">
-      Il sito che la tua<br/>pizzeria <em>merita</em>
-    </h1>
-    <p class="hero-p rv rv-d2">
-      Menu digitale. Ordini su WhatsApp. Dashboard in tempo reale.<br/>
-      Zero commissioni. Pronto domani. Tuo per sempre.
-    </p>
-    <div class="hero-cta rv rv-d3">
-      <a href="#inizia" class="btn btn-primary btn-lg">
-        Crea il tuo sito
+  <!-- 0 — HERO -->
+  <div class="slide active" data-i="0">
+    <div class="slide-inner" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+      <p class="t-eyebrow reveal-text">Sistema ordini per pizzerie</p>
+      <h1 class="t-hero reveal-text d1">Voglia<br/>di <em class="t-italic t-warm">Pizza</em></h1>
+      <div class="gap-lg"></div>
+      <p class="t-body reveal-text d2" style="text-align:center; max-width:38ch;">
+        Il sito che la tua pizzeria merita.<br/>Menu, ordini WhatsApp, dashboard.<br/>Pronto domani.
+      </p>
+      <div class="gap-lg"></div>
+      <button type="button" class="cta cta-dark reveal-text d3" onclick="go(1)">
+        Inizia
         <svg width="18" height="18" fill="none" viewBox="0 0 20 20"><path d="M4 10h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="https://micmer-lulivo.github.io/lulivo/menu/" target="_blank" class="btn btn-ghost btn-lg">Demo live</a>
-    </div>
-    <div class="hero-stats rv rv-d4">
-      <div class="stat"><span class="stat-n">0%</span><span class="stat-l">commissioni</span></div>
-      <div class="stat-sep"></div>
-      <div class="stat"><span class="stat-n">24h</span><span class="stat-l">online</span></div>
-      <div class="stat-sep"></div>
-      <div class="stat"><span class="stat-n">100%</span><span class="stat-l">tuo</span></div>
+      </button>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ MARQUEE ═══════════ -->
-<div class="marquee-wrap">
-  <div class="marquee">
-    <span>Menu digitale</span><span class="dot"></span>
-    <span>Ordini WhatsApp</span><span class="dot"></span>
-    <span>Ordini vocali AI</span><span class="dot"></span>
-    <span>Dashboard ordini</span><span class="dot"></span>
-    <span>Slot orari</span><span class="dot"></span>
-    <span>Zone consegna</span><span class="dot"></span>
-    <span>Zero commissioni</span><span class="dot"></span>
-    <span>Menu digitale</span><span class="dot"></span>
-    <span>Ordini WhatsApp</span><span class="dot"></span>
-    <span>Ordini vocali AI</span><span class="dot"></span>
-    <span>Dashboard ordini</span><span class="dot"></span>
-    <span>Slot orari</span><span class="dot"></span>
-    <span>Zone consegna</span><span class="dot"></span>
-    <span>Zero commissioni</span><span class="dot"></span>
-  </div>
-</div>
-
-<!-- ═══════════ PROBLEM ═══════════ -->
-<section class="dark-section">
-  <div class="wrap">
-    <div class="problem-grid">
-      <div class="problem-item rv">
-        <span class="problem-n">30%</span>
-        <p>Le app di delivery prendono fino al 30% su ogni ordine. Su 3.000€ al mese, sono 900€ persi.</p>
-      </div>
-      <div class="problem-item rv rv-d1">
-        <span class="problem-n">"?"</span>
-        <p>"Vorrei due pizze, quella col... no l'altra..." — ogni ordine WhatsApp senza menu è un caos.</p>
-      </div>
-      <div class="problem-item rv rv-d2">
-        <span class="problem-n">5k€</span>
-        <p>Un'agenzia chiede 2.000–5.000€ per un sito. Tu vuoi impastare, non pagare sviluppatori.</p>
-      </div>
+  <!-- 1 — THE PROBLEM -->
+  <div class="slide dark" data-i="1">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Il problema</p>
+      <h2 class="t-big reveal-text d1" style="color:var(--bg);">
+        Le app prendono<br/>fino al <em class="t-italic" style="color:var(--warm);">30%</em>
+      </h2>
+      <div class="gap-md"></div>
+      <p class="t-body reveal-text d2">
+        Deliveroo, Glovo, JustEat. Su una margherita da 7€, a te restano 4,90€. Su 3.000€ al mese, perdi 900€.
+      </p>
+      <div class="gap-sm"></div>
+      <p class="t-body reveal-text d3">
+        I clienti già ti scrivono su WhatsApp. Ma senza un menu digitale, ogni ordine è confusione.
+      </p>
+      <div class="gap-sm"></div>
+      <p class="t-body reveal-text d4">
+        Le agenzie chiedono 2.000–5.000€. Tu vuoi impastare, non gestire un sito.
+      </p>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ HOW IT WORKS ═══════════ -->
-<section id="come-funziona">
-  <div class="wrap">
-    <div class="section-head rv">
-      <p class="eyebrow">Come funziona</p>
-      <h2>Tre passi. <em>Fine.</em></h2>
-    </div>
-    <div class="steps">
-      <div class="step rv">
-        <div class="step-line"></div>
-        <div class="step-circle">1</div>
-        <div class="step-body">
-          <h3>Compila il form</h3>
-          <p>Nome, indirizzo, menu, colori. Cinque minuti.</p>
+  <!-- 2 — THE SOLUTION -->
+  <div class="slide" data-i="2">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">La soluzione</p>
+      <h2 class="t-big reveal-text d1">
+        Tre passi,<br/><em class="t-italic t-warm">sei online</em>
+      </h2>
+      <div class="gap-lg"></div>
+      <div class="reveal-text d2" style="display:flex;flex-direction:column;gap:1.2rem;">
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <span style="font-family:var(--serif);font-size:2rem;color:var(--fg-4);line-height:1;">1</span>
+          <div><strong>Compila il form</strong><br/><span class="t-small">Nome, menu, colori. Cinque minuti.</span></div>
         </div>
-      </div>
-      <div class="step rv rv-d1">
-        <div class="step-line"></div>
-        <div class="step-circle">2</div>
-        <div class="step-body">
-          <h3>Noi costruiamo</h3>
-          <p>Sito su misura con menu, ordini WhatsApp e dashboard.</p>
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <span style="font-family:var(--serif);font-size:2rem;color:var(--fg-4);line-height:1;">2</span>
+          <div><strong>Noi costruiamo</strong><br/><span class="t-small">Sito su misura con menu, ordini, dashboard.</span></div>
         </div>
-      </div>
-      <div class="step rv rv-d2">
-        <div class="step-line"></div>
-        <div class="step-circle">3</div>
-        <div class="step-body">
-          <h3>Sei online</h3>
-          <p>Entro 24 ore. I clienti ordinano, tu incassi.</p>
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <span style="font-family:var(--serif);font-size:2rem;color:var(--fg-4);line-height:1;">3</span>
+          <div><strong>Vai online</strong><br/><span class="t-small">In 24 ore. I clienti ordinano, tu incassi.</span></div>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ FEATURES ═══════════ -->
-<section class="feat-section">
-  <div class="wrap">
-    <div class="section-head rv">
-      <p class="eyebrow">Tutto incluso</p>
-      <h2>Non un sito. <em>Un sistema.</em></h2>
-    </div>
-    <div class="feat-grid">
-      {[
-        ['📋', 'Menu digitale', 'Categorie, ricerca, aggiornabile in un minuto.'],
-        ['💬', 'Ordini WhatsApp', 'Il cliente compone e invia. Tu ricevi tutto formattato.'],
-        ['🎙', 'Voce + AI', '"Due margherite e una diavola" — capisce e compone.'],
-        ['📊', 'Dashboard live', 'Ordini, incassi, pizze top. Tutto in tempo reale.'],
-        ['🕐', 'Slot orari', 'Gestisci la capacità del forno. Niente ordini impossibili.'],
-        ['🚗', 'Zone consegna', 'Prezzi diversi per zona. Il cliente sceglie.'],
-      ].map(([icon, title, desc], i) => (
-        <div class={`feat-card rv rv-d${(i % 3) + 1}`}>
-          <span class="feat-icon">{icon}</span>
-          <h3>{title}</h3>
-          <p>{desc}</p>
-        </div>
-      ))}
+  <!-- 3 — WHAT'S INCLUDED -->
+  <div class="slide dark" data-i="3">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Tutto incluso</p>
+      <h2 class="t-big reveal-text d1" style="color:var(--bg);">
+        Non un sito.<br/><em class="t-italic" style="color:var(--warm);">Un sistema.</em>
+      </h2>
+      <div class="gap-lg"></div>
+      <div class="reveal-text d2" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem 2rem;">
+        <div><span style="font-size:1.3rem;">📋</span> <strong style="color:var(--bg);">Menu digitale</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">Categorie, ricerca, aggiornabile.</span></div>
+        <div><span style="font-size:1.3rem;">💬</span> <strong style="color:var(--bg);">Ordini WhatsApp</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">Formattati, zero confusione.</span></div>
+        <div><span style="font-size:1.3rem;">🎙</span> <strong style="color:var(--bg);">Voce + AI</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">"Due margherite" — capisce.</span></div>
+        <div><span style="font-size:1.3rem;">📊</span> <strong style="color:var(--bg);">Dashboard</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">Ordini, incassi, top pizze.</span></div>
+        <div><span style="font-size:1.3rem;">🕐</span> <strong style="color:var(--bg);">Slot orari</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">Capacità forno gestita.</span></div>
+        <div><span style="font-size:1.3rem;">🚗</span> <strong style="color:var(--bg);">Zone consegna</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">Prezzi per zona.</span></div>
+      </div>
+      <div class="gap-lg"></div>
+      <a href="https://micmer-lulivo.github.io/lulivo/menu/" target="_blank" class="cta cta-ghost reveal-text d3" style="color:var(--bg);border-color:rgba(255,255,255,0.3);">Vedi demo live</a>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ STYLES ═══════════ -->
-<section id="stili">
-  <div class="wrap">
-    <div class="section-head rv">
-      <p class="eyebrow">10 temi</p>
-      <h2>Il look della tua <em>pizzeria</em></h2>
-      <p style="margin-top:0.8rem;">Clicca uno stile per pre-selezionarlo nel form.</p>
-    </div>
-    <div class="styles-row">
-      {STYLES.map((s, i) => (
-        <button
-          class={`swatch rv rv-d${(i % 5) + 1}`}
-          data-sid={s.id}
-          style={`--bg:${s.bg};--pr:${s.primary};--ac:${s.accent};--tx:${s.text};`}
-        >
-          <div class="swatch-vis">
-            <div class="swatch-bar" style={`background:${s.primary}`}></div>
-            <div class="swatch-bar sm" style={`background:${s.accent}`}></div>
+  <!-- 4 — FORM: IDENTITY -->
+  <div class="slide" data-i="4">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Passo 1 di 5</p>
+      <h2 class="t-big reveal-text d1">
+        Come si chiama<br/>la tua <em class="t-italic t-warm">pizzeria?</em>
+      </h2>
+      <div class="gap-lg"></div>
+      <div class="reveal-text d2">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="nome">Nome *</label>
+            <input class="field-input" id="nome" name="nome" placeholder="Pizzeria da Mario" required />
           </div>
-          <span class="swatch-name">{s.name}</span>
-          <span class="swatch-vibe">{s.vibe}</span>
-        </button>
-      ))}
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ SOCIAL PROOF STRIP ═══════════ -->
-<section class="dark-section compact">
-  <div class="wrap proof-row rv">
-    <div class="proof-item">
-      <span class="proof-big">+30%</span>
-      <span class="proof-sub">margine senza app</span>
-    </div>
-    <div class="proof-item">
-      <span class="proof-big">5 min</span>
-      <span class="proof-sub">per onboarding</span>
-    </div>
-    <div class="proof-item">
-      <span class="proof-big">24h</span>
-      <span class="proof-sub">e sei live</span>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ WIZARD ═══════════ -->
-<section id="inizia" class="wizard-section">
-  <div class="wrap">
-    <div class="section-head rv">
-      <p class="eyebrow">Inizia ora</p>
-      <h2>Il tuo sito in <em>5 minuti</em></h2>
-    </div>
-
-    <div class="wizard rv">
-      <!-- progress -->
-      <div class="wiz-track">
-        <div class="wiz-bar" id="wizBar"></div>
+          <div class="field">
+            <label class="field-label" for="tagline">Tagline</label>
+            <input class="field-input" id="tagline" name="tagline" placeholder="Napoletana d'Asporto" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="indirizzo">Indirizzo *</label>
+          <input class="field-input" id="indirizzo" name="indirizzo" placeholder="Via Roma 1, 24100 Bergamo" required />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="telefono">Telefono *</label>
+            <input class="field-input" type="tel" id="telefono" name="telefono" placeholder="035 123456" required />
+          </div>
+          <div class="field">
+            <label class="field-label" for="whatsapp">WhatsApp *</label>
+            <input class="field-input" type="tel" id="whatsapp" name="whatsapp" placeholder="348 1234567" required />
+          </div>
+        </div>
       </div>
-      <div class="wiz-dots" id="wizDots">
-        {[1,2,3,4,5].map(n => (
-          <button class={`wiz-dot${n===1?' active':''}`} data-s={n} type="button">{n}</button>
+    </div>
+  </div>
+
+  <!-- 5 — FORM: MENU -->
+  <div class="slide dark" data-i="5">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Passo 2 di 5</p>
+      <h2 class="t-big reveal-text d1" style="color:var(--bg);">
+        Carica il tuo <em class="t-italic" style="color:var(--warm);">menu</em>
+      </h2>
+      <div class="gap-sm"></div>
+      <p class="t-body reveal-text d2">In qualsiasi formato. Noi lo digitalizziamo.</p>
+      <div class="gap-lg"></div>
+      <div class="upload-zone reveal-text d3" id="uz" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.15);">
+        <input type="file" id="menuFile" name="menu" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" />
+        <div style="font-size:2rem;margin-bottom:0.3rem;">📄</div>
+        <div style="font-weight:700;color:var(--bg);">Trascina o clicca</div>
+        <div class="t-small" style="margin-top:0.2rem;color:rgba(255,255,255,0.35);">PDF, Word, immagine</div>
+        <div id="fn" style="display:none;margin-top:0.5rem;color:var(--warm);font-weight:700;"></div>
+      </div>
+      <div class="gap-md"></div>
+      <div class="field reveal-text d4">
+        <label class="field-label" for="menuNote">Note</label>
+        <textarea class="field-textarea" id="menuNote" name="menuNote" placeholder="Prezzi da aggiornare, piatti stagionali..." style="color:var(--bg);border-color:rgba(255,255,255,0.15);"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 — FORM: HOURS -->
+  <div class="slide" data-i="6">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Passo 3 di 5</p>
+      <h2 class="t-big reveal-text d1">
+        Quando apri e<br/>dove <em class="t-italic t-warm">consegni?</em>
+      </h2>
+      <div class="gap-lg"></div>
+      <div class="reveal-text d2">
+        <div class="field">
+          <label class="field-label" for="orari">Orari *</label>
+          <input class="field-input" id="orari" name="orari" placeholder="Lun–Dom 18:00–22:00 | Lunedì chiuso" required />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="chiusura">Giorno chiusura</label>
+            <select class="field-select" id="chiusura" name="chiusura">
+              <option value="">Mai</option>
+              <option value="1">Lunedì</option><option value="2">Martedì</option>
+              <option value="3">Mercoledì</option><option value="4">Giovedì</option>
+              <option value="5">Venerdì</option><option value="6">Sabato</option>
+              <option value="0">Domenica</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="instagram">Instagram</label>
+            <input class="field-input" id="instagram" name="instagram" placeholder="@pizzeriadamario" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="consegna">Zone consegna</label>
+          <textarea class="field-textarea" id="consegna" name="consegna" placeholder="Città: 1€ | Limitrofe: 2.50€"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 — FORM: STYLE -->
+  <div class="slide dark" data-i="7">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Passo 4 di 5</p>
+      <h2 class="t-big reveal-text d1" style="color:var(--bg);">
+        Scegli lo <em class="t-italic" style="color:var(--warm);">stile</em>
+      </h2>
+      <div class="gap-sm"></div>
+      <p class="t-body reveal-text d2">Il tema grafico del tuo sito.</p>
+      <div class="gap-lg"></div>
+      <div class="style-grid reveal-text d3">
+        {STYLES.map((s) => (
+          <label class="style-opt" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);">
+            <input type="radio" name="stile" value={s.id} />
+            <div class="style-dots">
+              <span class="style-dot" style={`background:${s.primary}`}></span>
+              <span class="style-dot" style={`background:${s.accent}`}></span>
+            </div>
+            <strong style="color:var(--bg);">{s.name}</strong>
+            <span style="color:rgba(255,255,255,0.35);">{s.vibe}</span>
+          </label>
         ))}
       </div>
+    </div>
+  </div>
 
-      <form id="wf" enctype="multipart/form-data">
-
-        <!-- 1 -->
-        <div class="wiz-page active" data-p="1">
-          <div class="wiz-head">
-            <h3>La tua pizzeria</h3>
-            <p class="text-sm">Informazioni base del locale.</p>
-          </div>
-          <div class="grid-2">
-            <div class="fg">
-              <label class="fl" for="nome">Nome pizzeria *</label>
-              <input class="fi" id="nome" name="nome" placeholder="Pizzeria da Mario" required />
-            </div>
-            <div class="fg">
-              <label class="fl" for="tagline">Tagline</label>
-              <input class="fi" id="tagline" name="tagline" placeholder="Napoletana d'Asporto" />
-            </div>
-          </div>
-          <div class="fg">
-            <label class="fl" for="indirizzo">Indirizzo *</label>
-            <input class="fi" id="indirizzo" name="indirizzo" placeholder="Via Roma 1, 24100 Bergamo BG" required />
-          </div>
-          <div class="grid-2">
-            <div class="fg">
-              <label class="fl" for="telefono">Telefono *</label>
-              <input class="fi" type="tel" id="telefono" name="telefono" placeholder="035 123456" required />
-            </div>
-            <div class="fg">
-              <label class="fl" for="whatsapp">WhatsApp *</label>
-              <input class="fi" type="tel" id="whatsapp" name="whatsapp" placeholder="348 1234567" required />
-            </div>
-          </div>
+  <!-- 8 — REVIEW + SUBMIT -->
+  <div class="slide" data-i="8">
+    <div class="slide-inner">
+      <p class="t-eyebrow reveal-text">Passo 5 di 5</p>
+      <h2 class="t-big reveal-text d1">
+        Tutto <em class="t-italic t-warm">pronto?</em>
+      </h2>
+      <div class="gap-md"></div>
+      <div class="review reveal-text d2" id="review"></div>
+      <div class="gap-md"></div>
+      <div class="reveal-text d3">
+        <div class="field">
+          <label class="field-label" for="email">La tua email *</label>
+          <input class="field-input" type="email" id="email" name="email" placeholder="mario@pizzeria.it" required />
         </div>
-
-        <!-- 2 -->
-        <div class="wiz-page" data-p="2">
-          <div class="wiz-head">
-            <h3>Il menu</h3>
-            <p class="text-sm">Carica in qualsiasi formato. Noi lo digitalizziamo.</p>
-          </div>
-          <div class="file-zone" id="fz">
-            <input type="file" id="menuFile" name="menu" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" />
-            <div style="font-size:2.2rem;margin-bottom:0.4rem;">📄</div>
-            <div style="font-weight:700;color:var(--ink);">Trascina o clicca</div>
-            <div class="text-sm" style="margin-top:0.3rem;">PDF, Word, immagine — max 10 MB</div>
-            <div id="fn" style="display:none;margin-top:0.6rem;color:var(--warm);font-weight:700;"></div>
-          </div>
-          <div class="fg" style="margin-top:1.4rem;">
-            <label class="fl" for="menuNote">Note sul menu</label>
-            <textarea class="ft" id="menuNote" name="menuNote" placeholder="Dettagli: prezzi da aggiornare, piatti stagionali..."></textarea>
-          </div>
+        <div class="field">
+          <label class="field-label" for="note">Note</label>
+          <textarea class="field-textarea" id="note" name="note" placeholder="Qualsiasi dettaglio extra..."></textarea>
         </div>
-
-        <!-- 3 -->
-        <div class="wiz-page" data-p="3">
-          <div class="wiz-head">
-            <h3>Orari e consegne</h3>
-            <p class="text-sm">Quando apri e dove consegni.</p>
-          </div>
-          <div class="fg">
-            <label class="fl" for="orari">Orari *</label>
-            <input class="fi" id="orari" name="orari" placeholder="Lun–Dom 18:00–22:00 | Lunedì chiuso" required />
-          </div>
-          <div class="grid-2">
-            <div class="fg">
-              <label class="fl" for="chiusura">Giorno chiusura</label>
-              <select class="fs" id="chiusura" name="chiusura">
-                <option value="">Mai</option>
-                <option value="1">Lunedì</option>
-                <option value="2">Martedì</option>
-                <option value="3">Mercoledì</option>
-                <option value="4">Giovedì</option>
-                <option value="5">Venerdì</option>
-                <option value="6">Sabato</option>
-                <option value="0">Domenica</option>
-              </select>
-            </div>
-            <div class="fg">
-              <label class="fl" for="instagram">Instagram</label>
-              <input class="fi" id="instagram" name="instagram" placeholder="@pizzeriadamario" />
-            </div>
-          </div>
-          <div class="fg">
-            <label class="fl" for="consegna">Zone consegna e prezzi</label>
-            <textarea class="ft" id="consegna" name="consegna" placeholder="Città: 1€ | Limitrofe: 2.50€ | Supplemento singola: 2€"></textarea>
-          </div>
-          <div class="fg">
-            <label class="fl" for="facebook">Facebook</label>
-            <input class="fi" id="facebook" name="facebook" placeholder="URL pagina Facebook" />
-          </div>
-        </div>
-
-        <!-- 4 -->
-        <div class="wiz-page" data-p="4">
-          <div class="wiz-head">
-            <h3>Scegli lo stile</h3>
-            <p class="text-sm">Il tema grafico della tua pizzeria.</p>
-          </div>
-          <div class="style-pick">
-            {STYLES.map((s) => (
-              <label class="sp-opt" data-style={s.id}>
-                <input type="radio" name="stile" value={s.id} />
-                <div class="sp-colors">
-                  <span class="sp-dot" style={`background:${s.primary}`}></span>
-                  <span class="sp-dot" style={`background:${s.accent}`}></span>
-                  <span class="sp-dot sm" style={`background:${s.bg};border:1px solid var(--border-strong);`}></span>
-                </div>
-                <strong>{s.name}</strong>
-                <span class="text-sm">{s.vibe}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <!-- 5 -->
-        <div class="wiz-page" data-p="5">
-          <div class="wiz-head">
-            <h3>Riepilogo</h3>
-            <p class="text-sm">Controlla e invia. Ti ricontatteremo entro 24 ore.</p>
-          </div>
-          <div class="review" id="review"></div>
-          <div class="fg" style="margin-top:1.4rem;">
-            <label class="fl" for="email">La tua email *</label>
-            <input class="fi" type="email" id="email" name="email" placeholder="mario@pizzeria.it" required />
-          </div>
-          <div class="fg">
-            <label class="fl" for="note">Note extra</label>
-            <textarea class="ft" id="note" name="note" placeholder="Qualsiasi dettaglio in più..."></textarea>
-          </div>
-        </div>
-
-        <!-- nav -->
-        <div class="wiz-nav">
-          <button type="button" class="btn btn-ghost" id="wPrev" style="display:none;">
-            <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><path d="M16 10H4m4-4-4 4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Indietro
-          </button>
-          <div style="flex:1;"></div>
-          <button type="button" class="btn btn-primary btn-lg" id="wNext">
-            Avanti
-            <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><path d="M4 10h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button type="submit" class="btn btn-warm btn-lg" id="wSend" style="display:none;">
-            Invia richiesta
-          </button>
-        </div>
-      </form>
-
-      <div class="wiz-ok" id="wizOk" style="display:none;">
-        <div style="font-size:3.5rem;margin-bottom:1rem;">✓</div>
-        <h3>Richiesta inviata</h3>
-        <p style="margin-top:0.6rem;">Riceverai il link al tuo sito entro 24 ore.</p>
       </div>
+      <div class="gap-md"></div>
+      <button type="submit" class="cta cta-warm reveal-text d4" id="sendBtn">
+        Invia richiesta
+        <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><path d="M4 10h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ SEO ═══════════ -->
-<section class="seo">
-  <div class="wrap">
-    <h2 class="rv">Perché ogni pizzeria<br/><em>ha bisogno di un sito</em></h2>
-    <div class="seo-cols rv rv-d1">
-      <article>
-        <h3>Ordinare pizza online: il nuovo standard</h3>
-        <p>Il 67% dei clienti preferisce ordinare online. Un menu digitale con ordini WhatsApp non è un lusso — è il minimo. Con Voglia di Pizza hai tutto: menu, ordini, dashboard.</p>
-        <h3>Zero commissioni</h3>
-        <p>Le piattaforme prendono dal 15% al 35%. Su 3.000€/mese, sono fino a 1.050€ in meno. Col tuo sito, ogni euro resta a te.</p>
-      </article>
-      <article>
-        <h3>Ordini WhatsApp intelligenti</h3>
-        <p>Il cliente seleziona, sceglie orario e zona, e con un tap invia su WhatsApp. Ordine formattato, niente confusione.</p>
-        <h3>Pronto per te</h3>
-        <p>Bergamo o Milano, asporto o consegna — il sistema si adatta. 10 stili, carica il menu, in 24 ore sei online.</p>
-      </article>
+  <!-- 9 — SUCCESS -->
+  <div class="slide dark" data-i="9">
+    <div class="slide-inner" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+      <div class="success-check reveal-text">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 class="t-big reveal-text d1" style="color:var(--bg);">
+        Richiesta<br/><em class="t-italic" style="color:var(--warm);">inviata</em>
+      </h2>
+      <div class="gap-md"></div>
+      <p class="t-body reveal-text d2" style="text-align:center;">
+        Riceverai il link al tuo nuovo sito<br/>entro 24 ore. Controlla la tua email.
+      </p>
+      <div class="gap-lg"></div>
+      <p class="t-small reveal-text d3" style="color:rgba(255,255,255,0.35);">
+        Voglia di Pizza &copy; 2026 —
+        <a href="mailto:michelemerelli.8@gmail.com" style="color:rgba(255,255,255,0.5);">michelemerelli.8@gmail.com</a>
+      </p>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ FOOTER ═══════════ -->
-<footer class="foot">
-  <div class="wrap foot-in">
-    <span class="foot-brand">Voglia di Pizza</span>
-    <span class="text-sm">&copy; 2026 — <a href="mailto:michelemerelli.8@gmail.com">Contattaci</a></span>
-  </div>
-</footer>
+</div>
+</form>
 
-<!-- ═══════════ STYLES ═══════════ -->
-<style>
+<!-- NAV -->
+<button class="nav-arrow nav-back" id="navBack" style="display:none;" type="button" aria-label="Indietro">
+  <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M4 10h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button class="nav-arrow" id="navNext" type="button" aria-label="Avanti">
+  <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M4 10h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<div class="progress" id="prog"></div>
+<div class="counter" id="counter">1 / 9</div>
+<div class="key-hint" id="keyHint"><kbd>&larr;</kbd><kbd>&rarr;</kbd> per navigare</div>
 
-/* ─── Topbar ─── */
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(250, 250, 248, 0.7);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border);
-  padding: 0.7rem 0;
-}
-.topbar-in { display: flex; align-items: center; justify-content: space-between; }
-.topbar-brand {
-  font-family: var(--font-display); font-size: 1.35rem;
-  color: var(--ink); text-decoration: none;
-}
-.topbar-links { display: flex; align-items: center; gap: 1.8rem; }
-.topbar-links a { font-size: 0.88rem; color: var(--ink-50); font-weight: 500; }
-.topbar-links a:hover { color: var(--ink); }
-@media (max-width: 600px) { .topbar-links a:not(.btn) { display: none; } }
+<script is:inline>
+  const track = document.getElementById('track');
+  const slides = document.querySelectorAll('.slide');
+  const prog = document.getElementById('prog');
+  const counter = document.getElementById('counter');
+  const navNext = document.getElementById('navNext');
+  const navBack = document.getElementById('navBack');
+  const keyHint = document.getElementById('keyHint');
+  const TOTAL = slides.length;
+  const LAST_STORY = 3; // slides 0-3 are story, 4+ are form
+  const LAST_FORM = 8;  // slide 8 is submit
+  let cur = 0;
+  let submitted = false;
 
-/* ─── Hero ─── */
-.hero {
-  padding: calc(clamp(4rem, 10vw, 9rem) + 60px) 0 clamp(3rem, 8vw, 7rem);
-  text-align: center;
-}
-.hero-in { display: flex; flex-direction: column; align-items: center; }
-.hero-eyebrow {
-  font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--warm); margin-bottom: 1.2rem;
-}
-.hero-h em { color: var(--warm); }
-.hero-p {
-  margin-top: 1.5rem; font-size: clamp(1.05rem, 1.4vw, 1.2rem);
-  text-align: center; max-width: 480px; line-height: 1.8;
-}
-.hero-cta { margin-top: 2.2rem; display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
-.hero-stats {
-  margin-top: 3.5rem; display: flex; align-items: center; gap: 2rem;
-}
-.stat { text-align: center; }
-.stat-n {
-  display: block; font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--ink); line-height: 1;
-}
-.stat-l { font-size: 0.78rem; color: var(--ink-30); text-transform: uppercase; letter-spacing: 0.06em; }
-.stat-sep { width: 1px; height: 32px; background: var(--border-strong); }
-
-/* ─── Marquee ─── */
-.marquee-wrap {
-  overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  padding: 0.9rem 0; background: var(--surface-raised);
-}
-.marquee {
-  display: flex; gap: 2rem; width: max-content;
-  animation: scroll 25s linear infinite;
-  font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--ink-30);
-}
-.marquee .dot {
-  width: 4px; height: 4px; border-radius: 50%; background: var(--warm);
-  flex-shrink: 0; align-self: center;
-}
-@keyframes scroll { to { transform: translateX(-50%); } }
-
-/* ─── Dark section ─── */
-.dark-section { background: var(--ink); padding: clamp(3rem, 8vw, 6rem) 0; }
-.dark-section.compact { padding: clamp(2rem, 5vw, 3.5rem) 0; }
-
-.problem-grid {
-  display: grid; grid-template-columns: 1fr; gap: 2.5rem;
-}
-@media (min-width: 768px) { .problem-grid { grid-template-columns: repeat(3, 1fr); } }
-.problem-item p { color: rgba(255,255,255,0.5); max-width: none; }
-.problem-n {
-  display: block; font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--warm-mid);
-  margin-bottom: 0.6rem; line-height: 1;
-}
-
-/* ─── Section heads ─── */
-.section-head { text-align: center; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-.eyebrow {
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--warm); margin-bottom: 0.8rem;
-}
-.section-head h2 em { color: var(--warm); }
-
-/* ─── Steps ─── */
-.steps {
-  display: grid; grid-template-columns: 1fr; gap: 0;
-  max-width: 560px; margin: 0 auto;
-}
-@media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: none; } }
-.step { display: flex; gap: 1.2rem; align-items: flex-start; padding: 1.2rem 0; position: relative; }
-@media (min-width: 768px) { .step { flex-direction: column; align-items: center; text-align: center; } }
-.step-circle {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--ink); color: var(--surface);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 0.8rem; flex-shrink: 0;
-}
-.step-line {
-  display: none;
-}
-@media (min-width: 768px) {
-  .step-line {
-    display: block; position: absolute; top: 18px; left: calc(50% + 24px);
-    width: calc(100% - 48px); height: 1px; background: var(--border-strong);
-  }
-  .step:last-child .step-line { display: none; }
-}
-.step-body h3 { margin-bottom: 0.3rem; }
-
-/* ─── Features ─── */
-.feat-section { background: var(--surface-raised); }
-.feat-grid {
-  display: grid; grid-template-columns: 1fr; gap: 1.2rem;
-}
-@media (min-width: 768px) { .feat-grid { grid-template-columns: repeat(3, 1fr); } }
-.feat-card {
-  padding: 2rem; border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  transition: all 400ms var(--ease);
-}
-.feat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.06);
-  border-color: var(--border-strong);
-}
-.feat-icon { font-size: 1.6rem; display: block; margin-bottom: 1rem; }
-.feat-card h3 { margin-bottom: 0.4rem; }
-
-/* ─── Styles row ─── */
-.styles-row {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem;
-}
-@media (min-width: 768px) { .styles-row { grid-template-columns: repeat(5, 1fr); } }
-.swatch {
-  background: var(--surface-raised); border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 1rem 0.6rem;
-  cursor: pointer; text-align: center; font-family: inherit;
-  transition: all 300ms var(--ease);
-  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
-}
-.swatch:hover { border-color: var(--warm); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
-.swatch-vis { display: flex; gap: 5px; margin-bottom: 0.3rem; }
-.swatch-bar { width: 24px; height: 24px; border-radius: 50%; }
-.swatch-bar.sm { width: 16px; height: 16px; }
-.swatch-name { font-size: 0.82rem; font-weight: 700; }
-.swatch-vibe { font-size: 0.68rem; color: var(--ink-30); }
-
-/* ─── Proof row ─── */
-.proof-row { display: flex; justify-content: center; gap: clamp(2rem, 6vw, 5rem); flex-wrap: wrap; }
-.proof-item { text-align: center; }
-.proof-big {
-  display: block; font-family: var(--font-display);
-  font-size: clamp(2.2rem, 5vw, 3.2rem); color: var(--warm-mid); line-height: 1;
-}
-.proof-sub { display: block; margin-top: 0.4rem; color: rgba(255,255,255,0.45); font-size: 0.85rem; }
-
-/* ─── Wizard ─── */
-.wizard-section { background: var(--surface-sunken); }
-.wizard {
-  max-width: 640px; margin: 0 auto;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-/* progress */
-.wiz-track {
-  height: 2px; background: var(--surface-sunken); border-radius: 100px;
-  overflow: hidden; margin-bottom: 0.8rem;
-}
-.wiz-bar {
-  height: 100%; width: 20%; background: var(--warm); border-radius: 100px;
-  transition: width 500ms var(--ease);
-}
-.wiz-dots { display: flex; justify-content: space-between; margin-bottom: 2rem; }
-.wiz-dot {
-  width: 28px; height: 28px; border-radius: 50%; border: none;
-  background: var(--surface-sunken); color: var(--ink-30);
-  font-family: var(--font-body); font-weight: 900; font-size: 0.72rem;
-  cursor: default; transition: all 300ms var(--ease-spring);
-  display: flex; align-items: center; justify-content: center;
-}
-.wiz-dot.active { background: var(--warm); color: white; transform: scale(1.15); }
-.wiz-dot.done { background: var(--olive); color: white; }
-
-/* pages */
-.wiz-page { display: none; }
-.wiz-page.active { display: block; animation: pageIn 400ms var(--ease) both; }
-@keyframes pageIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
-.wiz-head { margin-bottom: 1.8rem; }
-.wiz-head h3 { margin-bottom: 0.2rem; }
-
-/* nav */
-.wiz-nav {
-  display: flex; align-items: center; gap: 0.8rem;
-  margin-top: 2rem; padding-top: 1.4rem; border-top: 1px solid var(--border);
-}
-
-/* style picker in wizard */
-.style-pick {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem;
-}
-@media (min-width: 540px) { .style-pick { grid-template-columns: repeat(5, 1fr); } }
-.sp-opt {
-  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
-  padding: 0.8rem 0.4rem; border: 1.5px solid var(--border);
-  border-radius: var(--radius); cursor: pointer;
-  transition: all var(--dur-fast); text-align: center;
-  background: var(--surface);
-}
-.sp-opt:hover { border-color: var(--ink-10); }
-.sp-opt:has(input:checked) {
-  border-color: var(--warm); background: var(--warm-soft);
-  box-shadow: 0 0 0 2px var(--warm-soft);
-}
-.sp-opt input { display: none; }
-.sp-colors { display: flex; gap: 3px; }
-.sp-dot { width: 18px; height: 18px; border-radius: 50%; }
-.sp-dot.sm { width: 12px; height: 12px; }
-.sp-opt strong { font-size: 0.75rem; }
-
-/* review */
-.review {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.2rem 1.4rem;
-}
-.rv-row {
-  display: flex; gap: 0.6rem; padding: 0.35rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.92rem;
-}
-.rv-row:last-child { border-bottom: none; }
-.rv-lbl { font-weight: 700; min-width: 100px; color: var(--ink-30); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
-.rv-val { color: var(--ink); }
-
-/* success */
-.wiz-ok { text-align: center; padding: 3rem 0; }
-.wiz-ok h3 { margin-bottom: 0.5rem; }
-
-/* ─── SEO ─── */
-.seo h2 em { color: var(--warm); }
-.seo-cols {
-  display: grid; grid-template-columns: 1fr; gap: 2.5rem;
-  margin-top: 2rem;
-}
-@media (min-width: 768px) { .seo-cols { grid-template-columns: 1fr 1fr; } }
-.seo-cols h3 { font-size: 1.15rem; margin: 1.2rem 0 0.4rem; }
-.seo-cols h3:first-child { margin-top: 0; }
-.seo-cols p { font-size: 0.95rem; line-height: 1.8; max-width: none; }
-
-/* ─── Footer ─── */
-.foot { padding: 2.5rem 0; border-top: 1px solid var(--border); }
-.foot-in { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem; }
-.foot-brand { font-family: var(--font-display); font-size: 1.1rem; }
-</style>
-
-<!-- ═══════════ WIZARD JS ═══════════ -->
-<script>
-  const form = document.getElementById('wf') as HTMLFormElement;
-  const pages = document.querySelectorAll<HTMLElement>('.wiz-page');
-  const dots = document.querySelectorAll<HTMLElement>('.wiz-dot');
-  const bar = document.getElementById('wizBar') as HTMLElement;
-  const prev = document.getElementById('wPrev')!;
-  const next = document.getElementById('wNext')!;
-  const send = document.getElementById('wSend')!;
-  const ok = document.getElementById('wizOk')!;
-  const review = document.getElementById('review')!;
-  const N = pages.length;
-  let cur = 1;
-
-  function go(s: number) {
-    if (s > cur) {
-      const pg = document.querySelector<HTMLElement>(`.wiz-page[data-p="${cur}"]`);
-      for (const f of pg?.querySelectorAll<HTMLInputElement>('[required]') || []) {
-        if (!f.value.trim()) { f.focus(); f.style.borderColor = 'var(--warm)'; return; }
+  function go(n) {
+    if (n < 0 || n >= TOTAL) return;
+    if (submitted && n < TOTAL - 1) return; // lock after submit
+    if (n > cur && n >= 4) {
+      // validate required fields on current form slide
+      const pg = slides[cur];
+      const req = pg.querySelectorAll('[required]');
+      for (const f of req) {
+        if (!f.value.trim()) { f.focus(); return; }
       }
     }
-    cur = s;
-    pages.forEach(p => p.classList.toggle('active', p.dataset.p === String(cur)));
-    dots.forEach(d => {
-      const n = Number(d.dataset.s);
-      d.className = 'wiz-dot' + (n === cur ? ' active' : n < cur ? ' done' : '');
-    });
-    bar.style.width = `${(cur / N) * 100}%`;
-    prev.style.display = cur === 1 ? 'none' : '';
-    next.style.display = cur === N ? 'none' : '';
-    send.style.display = cur === N ? '' : 'none';
-    if (cur === N) buildReview();
+
+    slides[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    track.style.transform = 'translateX(-' + (cur * 100) + 'vw)';
+    prog.style.width = ((cur + 1) / TOTAL * 100) + '%';
+    counter.textContent = (cur + 1) + ' / ' + (TOTAL - (submitted ? 0 : 1));
+
+    navBack.style.display = cur === 0 || submitted ? 'none' : '';
+    navNext.style.display = cur >= LAST_FORM || submitted ? 'none' : '';
+    navBack.classList.toggle('back', true);
+
+    // Hide counter and hint on last slide
+    counter.style.display = cur === TOTAL - 1 ? 'none' : '';
+    keyHint.style.display = cur === 0 || cur === TOTAL - 1 ? 'none' : '';
+
+    // Build review on slide 8
+    if (cur === 8) buildReview();
   }
 
-  prev.addEventListener('click', () => go(cur - 1));
-  next.addEventListener('click', () => go(cur + 1));
+  // Arrow clicks
+  navNext.addEventListener('click', function() { go(cur + 1); });
+  navBack.addEventListener('click', function() { go(cur - 1); });
 
-  function v(id: string) {
-    return (document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null)?.value?.trim() || '—';
-  }
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); go(cur + 1); }
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+  });
 
-  function buildReview() {
-    const fi = document.getElementById('menuFile') as HTMLInputElement;
-    const file = fi.files?.[0]?.name || 'Nessun file';
-    const style = (document.querySelector<HTMLInputElement>('input[name="stile"]:checked'))?.value || '—';
-    review.innerHTML = [
-      ['Nome', v('nome')], ['Tagline', v('tagline')], ['Indirizzo', v('indirizzo')],
-      ['Telefono', v('telefono')], ['WhatsApp', v('whatsapp')], ['Menu', file],
-      ['Orari', v('orari')], ['Instagram', v('instagram')], ['Stile', style],
-    ].map(([l, val]) => `<div class="rv-row"><span class="rv-lbl">${l}</span><span class="rv-val">${val}</span></div>`).join('');
-  }
+  // Touch swipe
+  let tx = 0;
+  track.addEventListener('touchstart', function(e) { tx = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) { dx < 0 ? go(cur + 1) : go(cur - 1); }
+  });
 
   // File upload
-  const fz = document.getElementById('fz')!;
-  const mf = document.getElementById('menuFile') as HTMLInputElement;
-  const fn = document.getElementById('fn')!;
-  mf.addEventListener('change', () => { if (mf.files?.[0]) { fn.textContent = `\u2713 ${mf.files[0].name}`; fn.style.display = 'block'; } });
-  fz.addEventListener('dragover', e => { e.preventDefault(); fz.classList.add('over'); });
-  fz.addEventListener('dragleave', () => fz.classList.remove('over'));
-  fz.addEventListener('drop', e => {
-    e.preventDefault(); fz.classList.remove('over');
-    const dt = (e as DragEvent).dataTransfer;
-    if (dt?.files?.[0]) { mf.files = dt.files; fn.textContent = `\u2713 ${dt.files[0].name}`; fn.style.display = 'block'; }
+  const uz = document.getElementById('uz');
+  const mf = document.getElementById('menuFile');
+  const fn = document.getElementById('fn');
+  mf.addEventListener('change', function() {
+    if (mf.files && mf.files[0]) { fn.textContent = '\u2713 ' + mf.files[0].name; fn.style.display = 'block'; }
   });
+  uz.addEventListener('dragover', function(e) { e.preventDefault(); uz.classList.add('over'); });
+  uz.addEventListener('dragleave', function() { uz.classList.remove('over'); });
+  uz.addEventListener('drop', function(e) {
+    e.preventDefault(); uz.classList.remove('over');
+    if (e.dataTransfer && e.dataTransfer.files[0]) {
+      mf.files = e.dataTransfer.files;
+      fn.textContent = '\u2713 ' + e.dataTransfer.files[0].name; fn.style.display = 'block';
+    }
+  });
+
+  // Review
+  function buildReview() {
+    var v = function(id) { var el = document.getElementById(id); return el && el.value && el.value.trim() ? el.value.trim() : '\u2014'; };
+    var fi = document.getElementById('menuFile');
+    var file = fi.files && fi.files[0] ? fi.files[0].name : 'Nessun file';
+    var checked = document.querySelector('input[name="stile"]:checked');
+    var style = checked ? checked.value : '\u2014';
+    var rows = [
+      ['Nome', v('nome')], ['Tagline', v('tagline')], ['Indirizzo', v('indirizzo')],
+      ['Telefono', v('telefono')], ['WhatsApp', v('whatsapp')], ['Menu', file],
+      ['Orari', v('orari')], ['Instagram', v('instagram')], ['Stile', style]
+    ];
+    document.getElementById('review').innerHTML = rows.map(function(r) {
+      return '<div class="review-row"><span class="review-l">' + r[0] + '</span><span class="review-v">' + r[1] + '</span></div>';
+    }).join('');
+  }
 
   // Submit
-  form.addEventListener('submit', async (e) => {
+  document.getElementById('F').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const em = document.getElementById('email') as HTMLInputElement;
+    var em = document.getElementById('email');
     if (!em.value.trim()) { em.focus(); return; }
-    send.innerHTML = 'Invio...'; (send as HTMLButtonElement).disabled = true;
-
-    const fd = new FormData(form);
-    fd.append('_subject', `Nuova pizzeria: ${fd.get('nome')}`);
+    var btn = document.getElementById('sendBtn');
+    btn.innerHTML = 'Invio...'; btn.disabled = true;
+    var fd = new FormData(this);
+    fd.append('_subject', 'Nuova pizzeria: ' + fd.get('nome'));
     fd.append('_captcha', 'false');
     fd.append('_template', 'box');
-
     try {
-      const r = await fetch('https://formsubmit.co/ajax/michelemerelli.8@gmail.com', { method: 'POST', body: fd });
+      var r = await fetch('https://formsubmit.co/ajax/michelemerelli.8@gmail.com', { method: 'POST', body: fd });
       if (!r.ok) throw 0;
-    } catch {
-      const fields = ['nome','tagline','indirizzo','telefono','whatsapp','orari','chiusura','consegna','instagram','facebook','stile','email','menuNote','note'];
-      const body = fields.map(f => `${f}: ${fd.get(f) || '—'}`).join('\n');
-      window.open(`mailto:michelemerelli.8@gmail.com?subject=${encodeURIComponent(`Nuova pizzeria: ${fd.get('nome')}`)}&body=${encodeURIComponent(body)}`);
+    } catch (err) {
+      var fields = ['nome','tagline','indirizzo','telefono','whatsapp','orari','chiusura','consegna','instagram','stile','email','menuNote','note'];
+      var body = fields.map(function(f) { return f + ': ' + (fd.get(f) || '\u2014'); }).join('\n');
+      window.open('mailto:michelemerelli.8@gmail.com?subject=' + encodeURIComponent('Nuova pizzeria: ' + fd.get('nome')) + '&body=' + encodeURIComponent(body));
     }
-    form.style.display = 'none';
-    document.querySelector('.wiz-track')?.remove();
-    document.querySelector('.wiz-dots')?.remove();
-    document.querySelector('.wiz-nav')?.remove();
-    ok.style.display = 'block';
+    submitted = true;
+    go(9);
   });
 
-  // Style swatch click → pre-select and scroll to wizard
-  document.querySelectorAll('.swatch').forEach(s => {
-    s.addEventListener('click', () => {
-      const id = (s as HTMLElement).dataset.sid;
-      const r = document.querySelector<HTMLInputElement>(`input[name="stile"][value="${id}"]`);
-      if (r) r.checked = true;
-      document.getElementById('inizia')?.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => { cur = 3; go(4); }, 500);
-    });
-  });
+  // Init
+  go(0);
 </script>
 
 </BaseLayout>
