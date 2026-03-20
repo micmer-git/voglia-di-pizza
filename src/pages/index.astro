@@ -1,0 +1,1275 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+import { STYLES } from '../data/styles';
+---
+
+<BaseLayout
+  title="Voglia di Pizza — Il sito web per la tua pizzeria. Ordini online in 24 ore."
+  description="Sistema di ordinazione online per pizzerie. Menu digitale, ordini WhatsApp, dashboard ordini. Sito web professionale pronto in 24 ore. Prova gratuita."
+>
+
+<!-- ═══════════════════════════════════════════
+     NAV
+     ═══════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="nav-brand">
+      <span class="nav-logo">🍕</span>
+      <span class="nav-name">Voglia di Pizza</span>
+    </a>
+    <div class="nav-links">
+      <a href="#come-funziona">Come funziona</a>
+      <a href="#stili">Stili</a>
+      <a href="#inizia" class="btn btn-primary btn-nav">Inizia gratis</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="pill reveal">Pronto in 24 ore</div>
+    <h1 class="hero-title reveal reveal-delay-1">
+      Il sito che la tua<br />
+      pizzeria <em>merita</em>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      Menu digitale, ordini su WhatsApp, dashboard ordini.<br />
+      Zero commissioni. Nessun abbonamento. Il tuo sito, per sempre.
+    </p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <a href="#inizia" class="btn btn-warm btn-lg">
+        Crea il tuo sito
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="https://micmer-lulivo.github.io/lulivo/menu/" target="_blank" class="btn btn-outline btn-lg">Vedi demo live</a>
+    </div>
+    <div class="hero-proof reveal reveal-delay-4">
+      <div class="hero-proof-item">
+        <strong>0%</strong>
+        <span>commissioni</span>
+      </div>
+      <div class="hero-proof-sep"></div>
+      <div class="hero-proof-item">
+        <strong>24h</strong>
+        <span>online</span>
+      </div>
+      <div class="hero-proof-sep"></div>
+      <div class="hero-proof-item">
+        <strong>100%</strong>
+        <span>tuo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     THE PROBLEM
+     ═══════════════════════════════════════════ -->
+<section class="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="reveal">
+        <span class="problem-icon">📱</span>
+        <h3>Le app ti mangiano i margini</h3>
+        <p>Deliveroo, Glovo, JustEat prendono fino al 30% su ogni ordine. Su una margherita da 7€, a te restano 4,90€.</p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <span class="problem-icon">🤳</span>
+        <h3>I clienti già ti scrivono su WhatsApp</h3>
+        <p>Ma senza un menu digitale, ogni ordine è un messaggio confuso. "Vorrei due pizze... quella col prosciutto... no, l'altra."</p>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <span class="problem-icon">💸</span>
+        <h3>I siti web costano troppo</h3>
+        <p>Un'agenzia chiede 2.000–5.000€ per un sito che poi va aggiornato. Tu vuoi impastare, non gestire un sito.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     HOW IT WORKS
+     ═══════════════════════════════════════════ -->
+<section id="come-funziona" class="how">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill">Come funziona</div>
+      <h2>Da zero a online<br /><em>in tre passi</em></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step card reveal">
+        <div class="step-num">01</div>
+        <h3>Compila il form</h3>
+        <p>Nome, indirizzo, menu, colori. Cinque minuti e hai finito.</p>
+      </div>
+      <div class="step card reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <h3>Noi costruiamo</h3>
+        <p>Creiamo il tuo sito su misura con menu digitale, ordini WhatsApp e dashboard.</p>
+      </div>
+      <div class="step card reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <h3>Vai online</h3>
+        <p>Entro 24 ore il tuo sito è live. I clienti ordinano, tu incassi. Semplice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FEATURES
+     ═══════════════════════════════════════════ -->
+<section class="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill">Tutto incluso</div>
+      <h2>Non è solo un sito.<br /><em>È il tuo sistema ordini.</em></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card card reveal">
+        <div class="feature-icon">📋</div>
+        <h3>Menu digitale</h3>
+        <p>Bello, veloce, con ricerca e categorie. Aggiornabile in un minuto.</p>
+      </div>
+      <div class="feature-card card reveal reveal-delay-1">
+        <div class="feature-icon">💬</div>
+        <h3>Ordini WhatsApp</h3>
+        <p>Il cliente compone l'ordine e lo invia su WhatsApp. Tu ricevi tutto formattato.</p>
+      </div>
+      <div class="feature-card card reveal reveal-delay-2">
+        <div class="feature-icon">🎙️</div>
+        <h3>Ordini vocali AI</h3>
+        <p>"Due margherite e una diavola" — il sistema capisce e compone l'ordine.</p>
+      </div>
+      <div class="feature-card card reveal">
+        <div class="feature-icon">📊</div>
+        <h3>Dashboard ordini</h3>
+        <p>Vedi in tempo reale cosa arriva, quanto incassi, quali pizze vanno di più.</p>
+      </div>
+      <div class="feature-card card reveal reveal-delay-1">
+        <div class="feature-icon">🕐</div>
+        <h3>Slot orari</h3>
+        <p>Gestisci la capacità del forno. Mai più ordini impossibili da evadere.</p>
+      </div>
+      <div class="feature-card card reveal reveal-delay-2">
+        <div class="feature-icon">🚗</div>
+        <h3>Zone di consegna</h3>
+        <p>Definisci le zone con prezzi diversi. Il cliente sceglie e paga il giusto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     STYLE PICKER
+     ═══════════════════════════════════════════ -->
+<section id="stili" class="styles-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill">10 stili</div>
+      <h2>Scegli il look<br /><em>della tua pizzeria</em></h2>
+      <p>Ogni stile è personalizzabile. Clicca per vedere l'anteprima.</p>
+    </div>
+    <div class="styles-grid">
+      {STYLES.map((style, i) => (
+        <button
+          class={`style-card reveal reveal-delay-${(i % 4) + 1}`}
+          data-style-id={style.id}
+          style={`--s-bg: ${style.bg}; --s-primary: ${style.primary}; --s-accent: ${style.accent}; --s-text: ${style.text};`}
+        >
+          <div class="style-preview">
+            <div class="style-preview-header">
+              <div class="style-preview-dot"></div>
+              <div class="style-preview-dot"></div>
+              <div class="style-preview-dot"></div>
+            </div>
+            <div class="style-preview-hero">
+              <div class="style-preview-title"></div>
+              <div class="style-preview-sub"></div>
+            </div>
+            <div class="style-preview-cards">
+              <div class="style-preview-card"></div>
+              <div class="style-preview-card"></div>
+              <div class="style-preview-card"></div>
+            </div>
+          </div>
+          <div class="style-info">
+            <strong>{style.name}</strong>
+            <span>{style.vibe}</span>
+          </div>
+        </button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SOCIAL PROOF / NUMBERS
+     ═══════════════════════════════════════════ -->
+<section class="proof-section">
+  <div class="container">
+    <div class="proof-banner reveal">
+      <div class="proof-stat">
+        <span class="proof-num">30%</span>
+        <span class="proof-label">di margine in più<br />senza commissioni app</span>
+      </div>
+      <div class="proof-stat">
+        <span class="proof-num">5 min</span>
+        <span class="proof-label">per compilare<br />il form di onboarding</span>
+      </div>
+      <div class="proof-stat">
+        <span class="proof-num">24h</span>
+        <span class="proof-label">e il tuo sito<br />è online e funzionante</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     WIZARD / ONBOARDING FORM
+     ═══════════════════════════════════════════ -->
+<section id="inizia" class="wizard-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill">Inizia ora</div>
+      <h2>Crea il tuo sito<br /><em>in 5 minuti</em></h2>
+      <p>Compila i campi, carica il menu, scegli lo stile. Al resto pensiamo noi.</p>
+    </div>
+
+    <div class="wizard reveal">
+      <!-- Progress bar -->
+      <div class="wizard-progress">
+        <div class="wizard-progress-bar" id="wizardBar"></div>
+        <div class="wizard-steps-indicator">
+          <span class="wizard-step-dot active" data-step="1">1</span>
+          <span class="wizard-step-dot" data-step="2">2</span>
+          <span class="wizard-step-dot" data-step="3">3</span>
+          <span class="wizard-step-dot" data-step="4">4</span>
+          <span class="wizard-step-dot" data-step="5">5</span>
+        </div>
+      </div>
+
+      <form id="wizardForm" enctype="multipart/form-data">
+
+        <!-- STEP 1: Identity -->
+        <div class="wizard-page active" data-page="1">
+          <div class="wizard-page-header">
+            <span class="wizard-page-icon">🍕</span>
+            <h3>La tua pizzeria</h3>
+            <p class="text-muted">Le informazioni base del tuo locale.</p>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="nome">Nome pizzeria *</label>
+              <input class="form-input" type="text" id="nome" name="nome" placeholder="es. Pizzeria da Mario" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tagline">Tipo / Tagline</label>
+              <input class="form-input" type="text" id="tagline" name="tagline" placeholder="es. Pizzeria Napoletana d'Asporto" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="indirizzo">Indirizzo completo *</label>
+            <input class="form-input" type="text" id="indirizzo" name="indirizzo" placeholder="es. Via Roma 1, 24100 Bergamo BG" required />
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="telefono">Telefono *</label>
+              <input class="form-input" type="tel" id="telefono" name="telefono" placeholder="es. 035 123456" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="whatsapp">Numero WhatsApp *</label>
+              <input class="form-input" type="tel" id="whatsapp" name="whatsapp" placeholder="es. 3481234567" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Menu upload -->
+        <div class="wizard-page" data-page="2">
+          <div class="wizard-page-header">
+            <span class="wizard-page-icon">📋</span>
+            <h3>Il tuo menu</h3>
+            <p class="text-muted">Carica il menu in qualsiasi formato. Noi lo digitalizziamo.</p>
+          </div>
+          <div class="file-upload" id="menuUpload">
+            <input type="file" id="menuFile" name="menu" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" />
+            <div class="file-upload-icon">📄</div>
+            <div class="file-upload-text">Trascina il file qui o clicca per caricare</div>
+            <div class="file-upload-hint">PDF, Word, immagine — max 10 MB</div>
+            <div class="file-upload-name" id="menuFileName" style="display:none; margin-top: 0.5rem; color: var(--warm); font-weight: 600;"></div>
+          </div>
+          <div class="form-group" style="margin-top: var(--s-lg);">
+            <label class="form-label" for="menuNote">Note sul menu</label>
+            <textarea class="form-textarea" id="menuNote" name="menuNote" placeholder="Eventuali dettagli: prezzi da aggiornare, piatti stagionali, allergeni..."></textarea>
+          </div>
+        </div>
+
+        <!-- STEP 3: Details -->
+        <div class="wizard-page" data-page="3">
+          <div class="wizard-page-header">
+            <span class="wizard-page-icon">🕐</span>
+            <h3>Orari e consegne</h3>
+            <p class="text-muted">Quando apri e dove consegni.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="orari">Orari di apertura *</label>
+            <input class="form-input" type="text" id="orari" name="orari" placeholder="es. Lun–Dom 18:00–22:00 | Lunedì chiuso" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="chiusura">Giorno di chiusura</label>
+            <select class="form-select" id="chiusura" name="chiusura">
+              <option value="">Nessun giorno di chiusura</option>
+              <option value="1">Lunedì</option>
+              <option value="2">Martedì</option>
+              <option value="3">Mercoledì</option>
+              <option value="4">Giovedì</option>
+              <option value="5">Venerdì</option>
+              <option value="6">Sabato</option>
+              <option value="0">Domenica</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="consegna">Zone di consegna e prezzi</label>
+            <textarea class="form-textarea" id="consegna" name="consegna" placeholder="es. Città: 1€ | Zone limitrofe: 2.50€ | Supplemento pizza singola: 2€"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="instagram">Instagram</label>
+              <input class="form-input" type="text" id="instagram" name="instagram" placeholder="@pizzeriadamario" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="facebook">Facebook</label>
+              <input class="form-input" type="text" id="facebook" name="facebook" placeholder="URL pagina Facebook" />
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Style -->
+        <div class="wizard-page" data-page="4">
+          <div class="wizard-page-header">
+            <span class="wizard-page-icon">🎨</span>
+            <h3>Scegli lo stile</h3>
+            <p class="text-muted">Seleziona il tema che rappresenta la tua pizzeria.</p>
+          </div>
+          <div class="wizard-styles-grid" id="wizardStyleGrid">
+            {STYLES.map((style) => (
+              <label class="wizard-style-option" data-style={style.id}
+                style={`--s-bg: ${style.bg}; --s-primary: ${style.primary}; --s-accent: ${style.accent}; --s-text: ${style.text};`}
+              >
+                <input type="radio" name="stile" value={style.id} />
+                <div class="wizard-style-swatch">
+                  <div class="wizard-style-color" style={`background: ${style.primary}`}></div>
+                  <div class="wizard-style-color" style={`background: ${style.accent}`}></div>
+                  <div class="wizard-style-color sm" style={`background: ${style.bg}; border: 1px solid #ddd;`}></div>
+                </div>
+                <strong>{style.name}</strong>
+                <span class="text-muted">{style.vibe}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <!-- STEP 5: Review -->
+        <div class="wizard-page" data-page="5">
+          <div class="wizard-page-header">
+            <span class="wizard-page-icon">✅</span>
+            <h3>Riepilogo</h3>
+            <p class="text-muted">Controlla i dati e invia. Ti ricontatteremo entro 24 ore.</p>
+          </div>
+          <div class="review-card card" id="reviewCard">
+          </div>
+          <div class="form-group" style="margin-top: var(--s-lg);">
+            <label class="form-label" for="email">La tua email *</label>
+            <input class="form-input" type="email" id="email" name="email" placeholder="Per ricevere il link al tuo sito" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="note">Note aggiuntive</label>
+            <textarea class="form-textarea" id="note" name="note" placeholder="Qualsiasi dettaglio in più..."></textarea>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="wizard-nav">
+          <button type="button" class="btn btn-outline wizard-prev" id="wizardPrev" style="display:none;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M16 10H4m0 0l4-4m-4 4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Indietro
+          </button>
+          <button type="button" class="btn btn-warm btn-lg wizard-next" id="wizardNext">
+            Avanti
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="submit" class="btn btn-warm btn-lg wizard-submit" id="wizardSubmit" style="display:none;">
+            Invia richiesta
+          </button>
+        </div>
+      </form>
+
+      <!-- Success state -->
+      <div class="wizard-success" id="wizardSuccess" style="display:none;">
+        <div class="wizard-success-icon">🎉</div>
+        <h3>Richiesta inviata!</h3>
+        <p>Riceverai il link al tuo nuovo sito entro 24 ore.<br />Controlla la tua casella email.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SEO CONTENT — long-form for organic
+     ═══════════════════════════════════════════ -->
+<section class="seo-section">
+  <div class="container seo-inner">
+    <div class="reveal">
+      <h2>Perché ogni pizzeria<br /><em>ha bisogno di un sito</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="seo-grid reveal">
+      <article class="seo-article">
+        <h3>Ordinare pizza online: il nuovo standard</h3>
+        <p>Il 67% dei clienti preferisce ordinare online piuttosto che telefonare. Un sito web con sistema di ordinazione integrato non è più un lusso — è il minimo per competere. Con Voglia di Pizza, la tua pizzeria ha un menu digitale professionale, ordini diretti su WhatsApp e una dashboard per gestire tutto.</p>
+        <h3>Zero commissioni, massimo controllo</h3>
+        <p>Le piattaforme di delivery prendono dal 15% al 35% su ogni ordine. Su un fatturato di 3.000€ al mese, sono fino a 1.050€ che escono dalla tua cassa. Con il tuo sito web, ogni euro resta a te. I clienti ordinano direttamente, tu ricevi su WhatsApp.</p>
+        <h3>Sito web per pizzeria: cosa include</h3>
+        <p>Menu digitale con categorie e ricerca, ordini vocali con intelligenza artificiale, gestione slot orari per non sovraccaricare il forno, zone di consegna con prezzi differenziati, dashboard ordini in tempo reale. Tutto questo, pronto in 24 ore, senza costi nascosti.</p>
+      </article>
+      <article class="seo-article">
+        <h3>Come funziona il sistema ordini WhatsApp</h3>
+        <p>Il cliente apre il tuo menu dal telefono, seleziona le pizze, sceglie l'orario di ritiro o consegna, e con un tap invia l'ordine formattato su WhatsApp. Tu ricevi un messaggio chiaro con tutti i dettagli. Niente più "quella pizza con la cosa sopra".</p>
+        <h3>Intelligenza artificiale per gli ordini</h3>
+        <p>Il sistema riconosce ordini in linguaggio naturale. Il cliente può dire "due margherite, una diavola senza cipolla e tre birre" — l'AI capisce, compone il carrello e chiede conferma. Funziona anche a voce, direttamente dal browser.</p>
+        <h3>Pronto per la tua pizzeria</h3>
+        <p>Che tu sia una pizzeria d'asporto a Bergamo o una napoletana a Milano, il sistema si adatta. Scegli tra 10 stili grafici, carica il tuo menu, e in 24 ore sei online. Nessuna competenza tecnica richiesta.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span>🍕</span>
+      <strong>Voglia di Pizza</strong>
+    </div>
+    <p class="text-muted">Il sistema di ordinazione online per pizzerie italiane.</p>
+    <p class="text-muted" style="margin-top: var(--s-sm);">
+      &copy; 2026 Voglia di Pizza —
+      <a href="mailto:michelemerelli.8@gmail.com">Contattaci</a>
+    </p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     PAGE-SPECIFIC STYLES
+     ═══════════════════════════════════════════ -->
+<style>
+/* ─── Nav ─── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(250, 248, 245, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  padding: 0.8rem 0;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.nav-logo { font-size: 1.5rem; }
+
+.nav-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink-light);
+}
+
+.nav-links a:hover { color: var(--ink); }
+
+.btn-nav {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .nav-links a:not(.btn) { display: none; }
+}
+
+/* ─── Hero ─── */
+.hero {
+  padding: calc(var(--s-4xl) + 60px) 0 var(--s-3xl);
+  text-align: center;
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-title {
+  margin-top: var(--s-lg);
+  max-width: 800px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--warm);
+}
+
+.hero-sub {
+  margin-top: var(--s-lg);
+  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+  text-align: center;
+  max-width: 550px;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  margin-top: var(--s-xl);
+  display: flex;
+  gap: var(--s-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-proof {
+  margin-top: var(--s-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--s-xl);
+}
+
+.hero-proof-item {
+  text-align: center;
+}
+
+.hero-proof-item strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.hero-proof-item span {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-proof-sep {
+  width: 1px;
+  height: 40px;
+  background: var(--cream-dark);
+}
+
+/* ─── Problem ─── */
+.problem {
+  background: var(--white);
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-xl);
+}
+
+@media (min-width: 768px) {
+  .problem-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.problem-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--s-md);
+}
+
+.problem h3 {
+  margin-bottom: 0.5rem;
+}
+
+/* ─── Section headers ─── */
+.section-header {
+  text-align: center;
+  margin-bottom: var(--s-2xl);
+}
+
+.section-header .pill { margin-bottom: var(--s-md); }
+
+.section-header h2 em {
+  font-style: italic;
+  color: var(--warm);
+}
+
+.section-header p {
+  margin: var(--s-md) auto 0;
+  text-align: center;
+}
+
+/* ─── Steps ─── */
+.steps-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-lg);
+}
+
+@media (min-width: 768px) {
+  .steps-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.step { text-align: center; }
+
+.step-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--cream-dark);
+  margin-bottom: var(--s-md);
+  line-height: 1;
+}
+
+.step h3 { margin-bottom: 0.5rem; }
+
+/* ─── Features ─── */
+.features { background: var(--white); }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-lg);
+}
+
+@media (min-width: 768px) {
+  .features-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: var(--s-md);
+}
+
+.feature-card h3 { margin-bottom: 0.5rem; }
+
+/* ─── Style picker ─── */
+.styles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-md);
+}
+
+@media (min-width: 768px) {
+  .styles-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+.style-card {
+  background: none;
+  border: 2px solid var(--cream-dark);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--dur-med) var(--ease-spring);
+  text-align: left;
+  font-family: inherit;
+}
+
+.style-card:hover {
+  border-color: var(--warm);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+}
+
+.style-preview {
+  background: var(--s-bg);
+  padding: 1rem;
+  aspect-ratio: 4/3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.style-preview-header {
+  display: flex;
+  gap: 4px;
+}
+
+.style-preview-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--s-primary);
+  opacity: 0.5;
+}
+
+.style-preview-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.style-preview-title {
+  width: 70%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--s-text);
+  opacity: 0.8;
+}
+
+.style-preview-sub {
+  width: 45%;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--s-text);
+  opacity: 0.3;
+}
+
+.style-preview-cards {
+  display: flex;
+  gap: 4px;
+}
+
+.style-preview-card {
+  flex: 1;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--s-primary);
+  opacity: 0.2;
+}
+
+.style-preview-card:first-child { opacity: 0.4; }
+
+.style-info {
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  background: var(--white);
+}
+
+.style-info strong {
+  font-size: 0.85rem;
+}
+
+.style-info span {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+
+/* ─── Proof banner ─── */
+.proof-section {
+  background: var(--ink);
+  padding: var(--s-3xl) 0;
+}
+
+.proof-banner {
+  display: flex;
+  justify-content: center;
+  gap: var(--s-2xl);
+  flex-wrap: wrap;
+}
+
+.proof-stat { text-align: center; }
+
+.proof-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  color: var(--warm-light);
+  line-height: 1;
+}
+
+.proof-label {
+  display: block;
+  margin-top: 0.5rem;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ─── Wizard ─── */
+.wizard-section {
+  background: var(--white);
+}
+
+.wizard {
+  max-width: 700px;
+  margin: 0 auto;
+  background: var(--cream);
+  border-radius: var(--radius-lg);
+  padding: var(--s-xl);
+  border: 1px solid var(--cream-dark);
+}
+
+@media (min-width: 768px) {
+  .wizard { padding: var(--s-2xl); }
+}
+
+.wizard-progress {
+  margin-bottom: var(--s-xl);
+}
+
+.wizard-progress-bar {
+  height: 3px;
+  background: var(--cream-dark);
+  border-radius: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wizard-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20%;
+  background: var(--warm);
+  border-radius: 100px;
+  transition: width var(--dur-med) var(--ease-out);
+}
+
+.wizard-steps-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+}
+
+.wizard-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--cream-dark);
+  color: var(--ink-muted);
+  transition: all var(--dur-med) var(--ease-spring);
+}
+
+.wizard-step-dot.active {
+  background: var(--warm);
+  color: var(--white);
+  transform: scale(1.15);
+}
+
+.wizard-step-dot.done {
+  background: var(--olive);
+  color: var(--white);
+}
+
+/* Wizard pages */
+.wizard-page {
+  display: none;
+  animation: wizardIn var(--dur-med) var(--ease-out);
+}
+
+.wizard-page.active { display: block; }
+
+@keyframes wizardIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.wizard-page-header {
+  margin-bottom: var(--s-xl);
+}
+
+.wizard-page-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.wizard-page-header h3 {
+  margin-bottom: 0.3rem;
+}
+
+/* Wizard nav */
+.wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--s-xl);
+  padding-top: var(--s-lg);
+  border-top: 1px solid var(--cream-dark);
+}
+
+/* Wizard style grid */
+.wizard-styles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-md);
+}
+
+@media (min-width: 600px) {
+  .wizard-styles-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+.wizard-style-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 0.5rem;
+  border: 2px solid var(--cream-dark);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+  text-align: center;
+  background: var(--white);
+}
+
+.wizard-style-option:hover {
+  border-color: var(--ink-muted);
+}
+
+.wizard-style-option:has(input:checked) {
+  border-color: var(--warm);
+  background: var(--warm-glow);
+  box-shadow: 0 0 0 3px var(--warm-glow);
+}
+
+.wizard-style-option input { display: none; }
+
+.wizard-style-swatch {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.wizard-style-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.wizard-style-color.sm {
+  width: 14px;
+  height: 14px;
+}
+
+.wizard-style-option strong {
+  font-size: 0.8rem;
+}
+
+.wizard-style-option .text-muted {
+  font-size: 0.65rem;
+}
+
+/* Review card */
+.review-card {
+  background: var(--white);
+  line-height: 1.8;
+}
+
+.review-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--cream);
+}
+
+.review-row:last-child { border-bottom: none; }
+
+.review-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  min-width: 120px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.review-value {
+  color: var(--ink);
+}
+
+/* Wizard success */
+.wizard-success {
+  text-align: center;
+  padding: var(--s-2xl) 0;
+}
+
+.wizard-success-icon {
+  font-size: 4rem;
+  margin-bottom: var(--s-md);
+}
+
+.wizard-success h3 {
+  margin-bottom: var(--s-md);
+}
+
+/* ─── SEO section ─── */
+.seo-section {
+  padding: var(--s-3xl) 0;
+}
+
+.seo-inner h2 em {
+  font-style: italic;
+  color: var(--warm);
+}
+
+.seo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-2xl);
+  margin-top: var(--s-xl);
+}
+
+@media (min-width: 768px) {
+  .seo-grid { grid-template-columns: 1fr 1fr; gap: var(--s-2xl); }
+}
+
+.seo-article h3 {
+  font-size: 1.2rem;
+  margin: var(--s-lg) 0 0.5rem;
+}
+
+.seo-article h3:first-child { margin-top: 0; }
+
+.seo-article p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+/* ─── Footer ─── */
+.footer {
+  padding: var(--s-2xl) 0;
+  text-align: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+</style>
+
+<!-- ═══════════════════════════════════════════
+     WIZARD LOGIC
+     ═══════════════════════════════════════════ -->
+<script>
+  const form = document.getElementById('wizardForm') as HTMLFormElement;
+  const pages = document.querySelectorAll<HTMLElement>('.wizard-page');
+  const dots = document.querySelectorAll<HTMLElement>('.wizard-step-dot');
+  const bar = document.getElementById('wizardBar')!;
+  const prevBtn = document.getElementById('wizardPrev')!;
+  const nextBtn = document.getElementById('wizardNext')!;
+  const submitBtn = document.getElementById('wizardSubmit')!;
+  const successEl = document.getElementById('wizardSuccess')!;
+  const reviewCard = document.getElementById('reviewCard')!;
+  const totalSteps = pages.length;
+  let current = 1;
+
+  // Dynamic progress bar
+  const barStyle = document.createElement('style');
+  document.head.appendChild(barStyle);
+
+  function updateBar() {
+    const pct = (current / totalSteps) * 100;
+    barStyle.textContent = `.wizard-progress-bar::after { width: ${pct}% !important; }`;
+  }
+
+  function goTo(step: number) {
+    // Validate current page before moving forward
+    if (step > current) {
+      const currentPage = document.querySelector<HTMLElement>(`.wizard-page[data-page="${current}"]`);
+      const requiredFields = currentPage?.querySelectorAll<HTMLInputElement>('[required]') || [];
+      for (const field of requiredFields) {
+        if (!field.value.trim()) {
+          field.focus();
+          field.classList.add('shake');
+          setTimeout(() => field.classList.remove('shake'), 500);
+          return;
+        }
+      }
+    }
+
+    current = step;
+    pages.forEach(p => p.classList.remove('active'));
+    document.querySelector(`.wizard-page[data-page="${current}"]`)?.classList.add('active');
+
+    // Update dots
+    dots.forEach(d => {
+      const s = Number(d.dataset.step);
+      d.classList.remove('active', 'done');
+      if (s === current) d.classList.add('active');
+      else if (s < current) d.classList.add('done');
+    });
+
+    updateBar();
+
+    // Buttons
+    prevBtn.style.display = current === 1 ? 'none' : '';
+    nextBtn.style.display = current === totalSteps ? 'none' : '';
+    submitBtn.style.display = current === totalSteps ? '' : 'none';
+
+    // Build review on last step
+    if (current === totalSteps) buildReview();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  updateBar();
+
+  function buildReview() {
+    const val = (id: string) => {
+      const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+      return el?.value?.trim() || '—';
+    };
+    const fileInput = document.getElementById('menuFile') as HTMLInputElement;
+    const fileName = fileInput.files?.[0]?.name || 'Nessun file caricato';
+    const checkedStyle = document.querySelector<HTMLInputElement>('input[name="stile"]:checked');
+    const styleName = checkedStyle?.value || 'Non selezionato';
+
+    reviewCard.innerHTML = [
+      ['Nome', val('nome')],
+      ['Tagline', val('tagline')],
+      ['Indirizzo', val('indirizzo')],
+      ['Telefono', val('telefono')],
+      ['WhatsApp', val('whatsapp')],
+      ['Menu', fileName],
+      ['Orari', val('orari')],
+      ['Instagram', val('instagram')],
+      ['Stile', styleName],
+    ].map(([label, value]) =>
+      `<div class="review-row"><span class="review-label">${label}</span><span class="review-value">${value}</span></div>`
+    ).join('');
+  }
+
+  // File upload UX
+  const menuUpload = document.getElementById('menuUpload')!;
+  const menuFile = document.getElementById('menuFile') as HTMLInputElement;
+  const menuFileName = document.getElementById('menuFileName')!;
+
+  menuFile.addEventListener('change', () => {
+    if (menuFile.files?.[0]) {
+      menuFileName.textContent = `\u2713 ${menuFile.files[0].name}`;
+      menuFileName.style.display = 'block';
+    }
+  });
+
+  menuUpload.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    menuUpload.classList.add('drag-over');
+  });
+
+  menuUpload.addEventListener('dragleave', () => {
+    menuUpload.classList.remove('drag-over');
+  });
+
+  menuUpload.addEventListener('drop', (e) => {
+    e.preventDefault();
+    menuUpload.classList.remove('drag-over');
+    if ((e as DragEvent).dataTransfer?.files?.[0]) {
+      menuFile.files = (e as DragEvent).dataTransfer!.files;
+      menuFileName.textContent = `\u2713 ${(e as DragEvent).dataTransfer!.files[0].name}`;
+      menuFileName.style.display = 'block';
+    }
+  });
+
+  // Submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const emailField = document.getElementById('email') as HTMLInputElement;
+    if (!emailField.value.trim()) {
+      emailField.focus();
+      return;
+    }
+
+    submitBtn.innerHTML = 'Invio in corso...';
+    (submitBtn as HTMLButtonElement).disabled = true;
+
+    const fd = new FormData(form);
+    fd.append('_subject', `Nuova pizzeria: ${fd.get('nome')}`);
+    fd.append('_captcha', 'false');
+    fd.append('_template', 'box');
+
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/michelemerelli.8@gmail.com', {
+        method: 'POST',
+        body: fd,
+      });
+
+      if (!res.ok) throw new Error('fail');
+
+      form.style.display = 'none';
+      document.querySelector('.wizard-progress')?.remove();
+      document.querySelector('.wizard-nav')?.remove();
+      successEl.style.display = 'block';
+    } catch {
+      // Fallback to mailto
+      const fields = ['nome','tagline','indirizzo','telefono','whatsapp','orari','chiusura','consegna','instagram','facebook','stile','email','menuNote','note'];
+      const body = fields.map(f => `${f}: ${fd.get(f) || '—'}`).join('\n');
+      window.open(`mailto:michelemerelli.8@gmail.com?subject=${encodeURIComponent(`Nuova pizzeria: ${fd.get('nome')}`)}&body=${encodeURIComponent(body)}`);
+      form.style.display = 'none';
+      document.querySelector('.wizard-progress')?.remove();
+      document.querySelector('.wizard-nav')?.remove();
+      successEl.style.display = 'block';
+    }
+  });
+
+  // Clicking style cards in the showcase pre-selects in wizard
+  document.querySelectorAll('.style-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const styleId = (card as HTMLElement).dataset.styleId;
+      const radio = document.querySelector<HTMLInputElement>(`input[name="stile"][value="${styleId}"]`);
+      if (radio) radio.checked = true;
+      document.getElementById('inizia')?.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { current = 3; goTo(4); }, 600);
+    });
+  });
+</script>
+
+</BaseLayout>
