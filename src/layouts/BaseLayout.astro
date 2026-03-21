@@ -12,11 +12,20 @@ const { title, description } = Astro.props;
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content={description} />
   <title>{title}</title>
-  <link rel="icon" href="/voglia-di-pizza/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href={`https://voglia-di-pizza.pages.dev/`} />
+  <meta name="theme-color" content="#1a1a1a" />
+  <meta name="robots" content="index, follow" />
+  <meta name="google-site-verification" content="IFUh-UdRr6ksj6aAf_Nn9UpStzBzq38VaZEAOWkyBI8" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://voglia-di-pizza.pages.dev/" />
   <meta property="og:locale" content="it_IT" />
+  <meta property="og:site_name" content="Voglia di Pizza" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -28,6 +37,7 @@ const { title, description } = Astro.props;
     "operatingSystem": "Web",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
   })} />
+  <script is:inline src="/ab-testing.js"></script>
 </head>
 <body>
   <slot />

@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Stili — Voglia di Pizza" description="25 combinazioni di font, colori e mood per il tuo sito pizzeria">
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Libre+Baskerville:wght@400;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Archivo:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&family=Pacifico&family=Sacramento&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Satisfy&family=Kaushan+Script&family=Lobster&family=Permanent+Marker&family=Amatic+SC:wght@400;700&family=Abril+Fatface&display=swap" rel="stylesheet">
+
+<section class="styles-hero">
+  <a href="/" class="back-link">&larr; Torna a Voglia di Pizza</a>
+  <h1>Scegli il tuo stile</h1>
+  <p>25 combinazioni di font, colori e mood. Clicca su una card per segnare i tuoi preferiti.</p>
+  <div class="legend">
+    <span class="legend-tag">Clicca per selezionare</span>
+    <span class="legend-tag fav">&#9733; = Preferito</span>
+  </div>
+</section>
+
+<section class="styles-grid" id="grid"></section>
+
+<div class="styles-footer">
+  <div id="selectedCount">0 selezionati</div>
+  <button id="exportBtn" class="export-btn" disabled>Esporta selezione</button>
+</div>
+
+<div class="footer-dev-page">
+  developed by <a href="mailto:micmer.dev@gmail.com">micmer</a>
+</div>
+
+<script is:inline>
+const STYLES = [
+  {name:'Classico Italiano',vibe:'Elegante',fontDisplay:'Playfair Display',fontBody:'DM Sans',fontScript:'Great Vibes',primary:'#2d5016',accent:'#c5960c',bg:'#faf8f0',text:'#1a1a1a',mood:'Tradizionale, raffinato, caldo'},
+  {name:'Trattoria Nobile',vibe:'Elegante',fontDisplay:'Cormorant Garamond',fontBody:'Work Sans',fontScript:'Dancing Script',primary:'#4a1c1c',accent:'#b8860b',bg:'#fef9f2',text:'#2c1810',mood:'Lusso accessibile, vino rosso'},
+  {name:'Bistrot Milanese',vibe:'Elegante',fontDisplay:'Libre Baskerville',fontBody:'Plus Jakarta Sans',fontScript:'Sacramento',primary:'#1a1a2e',accent:'#d4a843',bg:'#f8f6f1',text:'#1a1a1a',mood:'Minimalismo urbano, design'},
+  {name:'Osteria Romantica',vibe:'Elegante',fontDisplay:'Lora',fontBody:'Nunito',fontScript:'Pacifico',primary:'#5c2d2d',accent:'#e8a87c',bg:'#fdf6f0',text:'#3d2c2c',mood:'Caldo, accogliente, romantico'},
+  {name:"Ristorante d'Arte",vibe:'Elegante',fontDisplay:'Abril Fatface',fontBody:'Raleway',fontScript:'Caveat',primary:'#0d3b66',accent:'#f4d35e',bg:'#f0f4f8',text:'#1a1a2e',mood:'Artistico, blu notte, oro'},
+  {name:'Neo Pizzeria',vibe:'Moderno',fontDisplay:'Outfit',fontBody:'DM Sans',fontScript:'Kaushan Script',primary:'#111827',accent:'#ef4444',bg:'#ffffff',text:'#111827',mood:'Pulito, tech, contemporaneo'},
+  {name:'Urban Street',vibe:'Moderno',fontDisplay:'Space Grotesk',fontBody:'Plus Jakarta Sans',fontScript:'Permanent Marker',primary:'#18181b',accent:'#f97316',bg:'#fafafa',text:'#18181b',mood:'Street food, bold, energia'},
+  {name:'Minimale Bianco',vibe:'Moderno',fontDisplay:'Sora',fontBody:'Work Sans',fontScript:'Satisfy',primary:'#374151',accent:'#10b981',bg:'#ffffff',text:'#1f2937',mood:'Ultra-clean, spazio, respiro'},
+  {name:'Nordico Caldo',vibe:'Moderno',fontDisplay:'Bricolage Grotesque',fontBody:'Nunito',fontScript:'Caveat',primary:'#292524',accent:'#d97706',bg:'#fafaf9',text:'#292524',mood:'Scandinavo, legno, naturale'},
+  {name:'Digital Fresh',vibe:'Moderno',fontDisplay:'Archivo',fontBody:'DM Sans',fontScript:'Dancing Script',primary:'#0f172a',accent:'#6366f1',bg:'#f8fafc',text:'#0f172a',mood:'Digitale, viola, fresco'},
+  {name:'Forno a Legna',vibe:'Rustico',fontDisplay:'Playfair Display',fontBody:'Inter',fontScript:'Lobster',primary:'#78350f',accent:'#f59e0b',bg:'#fefce8',text:'#451a03',mood:'Fuoco, legno, tradizione'},
+  {name:'Terra e Farina',vibe:'Rustico',fontDisplay:'Lora',fontBody:'Work Sans',fontScript:'Amatic SC',primary:'#365314',accent:'#a16207',bg:'#f7f3e9',text:'#1c1917',mood:'Campagna, genuino, terra'},
+  {name:'Bottega Antica',vibe:'Rustico',fontDisplay:'Cormorant Garamond',fontBody:'Raleway',fontScript:'Great Vibes',primary:'#44403c',accent:'#b45309',bg:'#f5f0e8',text:'#1c1917',mood:'Vintage, bottega, artigiano'},
+  {name:'Masseria Sud',vibe:'Rustico',fontDisplay:'Libre Baskerville',fontBody:'Poppins',fontScript:'Sacramento',primary:'#7c2d12',accent:'#65a30d',bg:'#fdf8f0',text:'#431407',mood:'Puglia, pomodoro, sole'},
+  {name:'Montagna Alpina',vibe:'Rustico',fontDisplay:'Outfit',fontBody:'Nunito',fontScript:'Caveat',primary:'#1e3a2f',accent:'#ca8a04',bg:'#f0f5f1',text:'#1a2e23',mood:'Montagna, pino, fresco'},
+  {name:'Napoli Pop',vibe:'Vivace',fontDisplay:'Poppins',fontBody:'DM Sans',fontScript:'Pacifico',primary:'#dc2626',accent:'#fbbf24',bg:'#fffbeb',text:'#1c1917',mood:'Rosso, giallo, energia Napoli'},
+  {name:'Vespa & Pizza',vibe:'Vivace',fontDisplay:'Bricolage Grotesque',fontBody:'Plus Jakarta Sans',fontScript:'Kaushan Script',primary:'#059669',accent:'#f43f5e',bg:'#f0fdf4',text:'#064e3b',mood:'Verde menta, rosa, retr\u00f2'},
+  {name:'Festa Italiana',vibe:'Vivace',fontDisplay:'Space Grotesk',fontBody:'Outfit',fontScript:'Dancing Script',primary:'#7c3aed',accent:'#f97316',bg:'#faf5ff',text:'#1e1b4b',mood:'Viola, arancio, festoso'},
+  {name:'Mare & Sole',vibe:'Vivace',fontDisplay:'Sora',fontBody:'Raleway',fontScript:'Satisfy',primary:'#0369a1',accent:'#ea580c',bg:'#f0f9ff',text:'#0c4a6e',mood:'Blu mare, arancio tramonto'},
+  {name:'Gelato Party',vibe:'Vivace',fontDisplay:'Nunito',fontBody:'Work Sans',fontScript:'Lobster',primary:'#db2777',accent:'#14b8a6',bg:'#fdf2f8',text:'#831843',mood:'Rosa, turchese, dolce, fun'},
+  {name:'Notte Romana',vibe:'Dark',fontDisplay:'Playfair Display',fontBody:'DM Sans',fontScript:'Great Vibes',primary:'#f5f5f4',accent:'#d4a843',bg:'#0f0f0f',text:'#e7e5e4',mood:'Nero, oro, luxury notturno'},
+  {name:'Carbone & Tartufo',vibe:'Dark',fontDisplay:'Cormorant Garamond',fontBody:'Plus Jakarta Sans',fontScript:'Sacramento',primary:'#fafaf9',accent:'#a78bfa',bg:'#18181b',text:'#d4d4d8',mood:'Dark mode, viola, premium'},
+  {name:'Cocktail Bar',vibe:'Dark',fontDisplay:'Space Grotesk',fontBody:'Outfit',fontScript:'Permanent Marker',primary:'#f1f5f9',accent:'#f43f5e',bg:'#0f172a',text:'#cbd5e1',mood:'Blu notte, neon rosa, club'},
+  {name:'Enoteca Nera',vibe:'Dark',fontDisplay:'Libre Baskerville',fontBody:'Work Sans',fontScript:'Caveat',primary:'#fef2f2',accent:'#991b1b',bg:'#1c1917',text:'#d6d3d1',mood:'Nero carbone, rosso vino'},
+  {name:'Industrial Chic',vibe:'Dark',fontDisplay:'Archivo',fontBody:'Sora',fontScript:'Amatic SC',primary:'#f8fafc',accent:'#eab308',bg:'#1e293b',text:'#94a3b8',mood:'Grigio acciaio, giallo, raw'},
+];
+const VIBE_COLORS = {'Elegante':'#c5960c','Moderno':'#6366f1','Rustico':'#b45309','Vivace':'#e11d48','Dark':'#8b5cf6'};
+const selected = new Set();
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  let html = '';
+  STYLES.forEach((s, i) => {
+    const isDark = s.vibe === 'Dark';
+    const borderCol = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+    html += '<div class="style-card" data-idx="'+i+'" onclick="toggleSelect('+i+')" style="background:'+s.bg+';border-color:'+borderCol+'">'
+      +'<div class="card-vibe" style="color:'+VIBE_COLORS[s.vibe]+'">'+s.vibe+'</div>'
+      +'<div class="card-name" style="font-family:\''+s.fontDisplay+'\',serif;color:'+s.text+'">'+s.name+'</div>'
+      +'<div class="card-preview">'
+      +'<div class="prev-script" style="font-family:\''+s.fontScript+'\',cursive;color:'+s.primary+'">Pizzeria</div>'
+      +'<div class="prev-heading" style="font-family:\''+s.fontDisplay+'\',serif;color:'+s.text+'">Menu del Giorno</div>'
+      +'<div class="prev-body" style="font-family:\''+s.fontBody+'\',sans-serif;color:'+(isDark?'rgba(255,255,255,0.6)':'rgba(0,0,0,0.5)')+'">Margherita, Diavola, Quattro Formaggi</div>'
+      +'<div class="prev-btn" style="background:'+s.accent+';color:'+(isDark||s.accent==='#f4d35e'||s.accent==='#fbbf24'||s.accent==='#eab308'?'#000':'#fff')+'">Ordina ora</div>'
+      +'<div class="prev-accent-bar" style="background:linear-gradient(90deg,'+s.primary+','+s.accent+')"></div>'
+      +'</div>'
+      +'<div class="card-fonts" style="color:'+(isDark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.3)')+'">'+s.fontDisplay+' + '+s.fontBody+'</div>'
+      +'<div class="card-mood" style="color:'+(isDark?'rgba(255,255,255,0.4)':'rgba(0,0,0,0.4)')+'">'+s.mood+'</div>'
+      +'<div class="card-star" id="star-'+i+'">&#9734;</div>'
+      +'</div>';
+  });
+  grid.innerHTML = html;
+}
+function toggleSelect(idx) {
+  var card = document.querySelector('[data-idx="'+idx+'"]');
+  var star = document.getElementById('star-'+idx);
+  if (selected.has(idx)) { selected.delete(idx); card.classList.remove('selected'); star.innerHTML='&#9734;'; }
+  else { selected.add(idx); card.classList.add('selected'); star.innerHTML='&#9733;'; }
+  document.getElementById('selectedCount').textContent = selected.size + ' selezionati';
+  document.getElementById('exportBtn').disabled = selected.size === 0;
+}
+document.getElementById('exportBtn').addEventListener('click', function() {
+  var body = 'I miei stili preferiti per il sito pizzeria:%0A%0A' + Array.from(selected).map(function(i){return '- '+STYLES[i].name+' ('+STYLES[i].vibe+')';}).join('%0A');
+  window.location.href = 'mailto:micmer.dev@gmail.com?subject=Preferenze stile pizzeria&body='+body;
+});
+renderGrid();
+</script>
+
+<style>
+  body { margin:0; font-family:'Plus Jakarta Sans',-apple-system,sans-serif; background:#f5f3ee; }
+  .styles-hero { text-align:center; padding:3rem 1.5rem 2rem; max-width:700px; margin:0 auto; }
+  .styles-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3rem); font-weight:800; margin:0 0 0.5rem; color:#1a1a1a; }
+  .styles-hero p { color:#555; font-size:1rem; line-height:1.7; margin-bottom:1rem; }
+  .back-link { display:inline-block; margin-bottom:1.5rem; color:#888; text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+  .back-link:hover { color:#333; }
+  .legend { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .legend-tag { font-size:0.75rem; padding:4px 12px; border-radius:20px; background:rgba(0,0,0,0.04); color:#666; }
+  .legend-tag.fav { color:#ca8a04; }
+  .styles-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; max-width:1400px; margin:0 auto; padding:0 1.5rem 2rem; }
+  .style-card { border:2px solid rgba(0,0,0,0.08); border-radius:12px; padding:20px 16px 16px; cursor:pointer; transition:all 0.3s ease; position:relative; overflow:hidden; }
+  .style-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+  .style-card.selected { border-color:#ca8a04; box-shadow:0 0 0 2px rgba(202,138,4,0.3),0 8px 24px rgba(0,0,0,0.1); }
+  .style-card.selected .card-star { color:#ca8a04; }
+  .card-vibe { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:6px; }
+  .card-name { font-size:1.1rem; font-weight:700; margin-bottom:12px; line-height:1.2; }
+  .card-preview { padding:14px; border-radius:8px; margin-bottom:10px; border:1px solid rgba(128,128,128,0.1); position:relative; overflow:hidden; }
+  .prev-script { font-size:1.6rem; margin-bottom:4px; opacity:0.9; }
+  .prev-heading { font-size:0.9rem; font-weight:700; margin-bottom:4px; }
+  .prev-body { font-size:0.75rem; margin-bottom:10px; line-height:1.4; }
+  .prev-btn { display:inline-block; padding:5px 16px; border-radius:4px; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .prev-accent-bar { position:absolute; bottom:0; left:0; right:0; height:3px; }
+  .card-fonts { font-size:0.65rem; margin-bottom:4px; font-style:italic; }
+  .card-mood { font-size:0.7rem; line-height:1.4; }
+  .card-star { position:absolute; top:12px; right:12px; font-size:1.4rem; color:rgba(128,128,128,0.25); transition:color 0.2s; }
+  .styles-footer { position:sticky; bottom:0; background:rgba(255,255,255,0.9); backdrop-filter:blur(12px); border-top:1px solid rgba(0,0,0,0.08); padding:12px 2rem; display:flex; align-items:center; justify-content:center; gap:16px; z-index:10; }
+  #selectedCount { font-size:0.85rem; color:#666; font-weight:500; }
+  .export-btn { background:#1a1a1a; color:white; border:none; padding:10px 24px; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+  .export-btn:hover { background:#333; transform:translateY(-1px); }
+  .export-btn:disabled { opacity:0.3; cursor:not-allowed; transform:none; }
+  .footer-dev-page { text-align:center; padding:1.5rem 0 1rem; font-size:0.7rem; color:rgba(0,0,0,0.15); letter-spacing:0.5px; }
+  .footer-dev-page a { color:rgba(0,0,0,0.2); text-decoration:none; }
+  .footer-dev-page a:hover { color:rgba(0,0,0,0.4); }
+  @media(max-width:1200px) { .styles-grid{grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:768px) { .styles-grid{grid-template-columns:repeat(2,1fr);gap:12px;} .card-name{font-size:0.95rem;} }
+  @media(max-width:480px) { .styles-grid{grid-template-columns:1fr 1fr;gap:10px;padding:0 1rem 2rem;} .style-card{padding:14px 12px 12px;} .prev-script{font-size:1.3rem;} }
+</style>
+
+</BaseLayout>

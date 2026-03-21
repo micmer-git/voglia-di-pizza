@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="A/B Dashboard — Voglia di Pizza" description="Analytics e ottimizzazione conversioni — 12 esperimenti">
+
+<div id="auth" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a0a;">
+  <div style="text-align:center;">
+    <h2 style="color:#fff;font-family:system-ui;margin-bottom:1rem;">A/B Dashboard</h2>
+    <input type="password" id="pw" placeholder="Password" style="padding:10px 16px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#fff;font-size:15px;outline:none;" />
+    <button onclick="tryLogin()" style="margin-left:8px;padding:10px 20px;border-radius:8px;border:none;background:#4f46e5;color:#fff;font-weight:600;cursor:pointer;">Accedi</button>
+    <p id="authErr" style="color:#f43f5e;margin-top:0.5rem;font-size:13px;display:none;">Password errata</p>
+  </div>
+</div>
+
+<div id="dash" style="display:none;min-height:100vh;background:#0a0a0a;color:#e5e5e5;font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding:2rem;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="font-size:1.5rem;font-weight:700;color:#fff;margin:0;">A/B Dashboard <span style="font-size:0.75rem;color:#666;font-weight:400;">12 esperimenti</span></h1>
+        <p style="color:#666;font-size:0.85rem;margin:4px 0 0;" id="dateRange"></p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="exportCSV()" style="padding:8px 16px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#aaa;font-size:13px;cursor:pointer;">Export CSV</button>
+        <button onclick="refreshDash()" style="padding:8px 16px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#aaa;font-size:13px;cursor:pointer;">Aggiorna</button>
+        <button onclick="if(confirm('Reset tutti i dati A/B?')){localStorage.removeItem('vdp_ab_events');localStorage.removeItem('vdp_ab_start');refreshDash()}" style="padding:8px 16px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#666;font-size:13px;cursor:pointer;">Reset</button>
+      </div>
+    </div>
+
+    <!-- 10-Day Window -->
+    <div class="card" id="windowCard">
+      <h3>Finestra 10 giorni</h3>
+      <div id="windowInfo"></div>
+    </div>
+
+    <!-- Funnel -->
+    <div class="card" id="funnelCard">
+      <h3>Funnel di conversione</h3>
+      <div id="funnel"></div>
+    </div>
+
+    <!-- Experiments -->
+    <div id="experiments"></div>
+
+    <!-- Recommendations -->
+    <div class="card" id="recsCard">
+      <h3>Raccomandazioni</h3>
+      <div id="recs"></div>
+    </div>
+
+    <!-- Daily trend -->
+    <div class="card">
+      <h3>Traffico giornaliero</h3>
+      <div id="trend"></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:2rem 0 1rem;font-size:0.7rem;color:rgba(255,255,255,0.12);letter-spacing:0.5px;">
+    developed by <a href="mailto:micmer.dev@gmail.com" style="color:rgba(255,255,255,0.18);text-decoration:none;">micmer</a>
+  </div>
+</div>
+
+<script is:inline>
+var ALL_EXPERIMENTS = [
+  'headline','cta_text','meta_description','tagline_hero','problem_framing',
+  'social_proof_position','step_labels','submit_cta','pricing_hint',
+  'form_order','hero_subtext','trust_footer'
+];
+var EXP_LABELS = {
+  headline:'Headline',cta_text:'Testo CTA',meta_description:'Meta Description',
+  tagline_hero:'Tagline Hero',problem_framing:'Problem Framing',
+  social_proof_position:'Social Proof Position',step_labels:'Step Labels',
+  submit_cta:'Submit CTA',pricing_hint:'Pricing Hint',form_order:'Form Order',
+  hero_subtext:'Hero Subtext',trust_footer:'Trust Footer'
+};
+
+function tryLogin(){
+  if(document.getElementById('pw').value==='pizzeria2026'){
+    document.getElementById('auth').style.display='none';
+    document.getElementById('dash').style.display='block';
+    refreshDash();
+  } else {
+    document.getElementById('authErr').style.display='block';
+  }
+}
+document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin()});
+
+function getEvents(){
+  try{return JSON.parse(localStorage.getItem('vdp_ab_events')||'[]')}catch(e){return[]}
+}
+
+function confidenceBadge(visits) {
+  if (visits < 50) return '<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#78350f;color:#fbbf24;">&#9888; <'+50+'</span>';
+  if (visits < 100) return '<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#1e3a5f;color:#60a5fa;">&#8505; '+visits+'</span>';
+  return '<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#14532d;color:#4ade80;">&#10003; '+visits+'</span>';
+}
+
+function refreshDash(){
+  var events = getEvents();
+
+  // 10-Day Window
+  var startDate = localStorage.getItem('vdp_ab_start');
+  var windowEl = document.getElementById('windowInfo');
+  if (startDate) {
+    var start = new Date(startDate);
+    var now = new Date();
+    var diffDays = Math.floor((now - start) / 86400000) + 1;
+    var remaining = Math.max(0, 10 - diffDays);
+    var pct = Math.min(100, Math.round((diffDays / 10) * 100));
+    var barColor = remaining === 0 ? '#16a34a' : '#4f46e5';
+    windowEl.innerHTML = '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">'
+      +'<div><span style="font-size:24px;font-weight:800;color:#fff;">Giorno '+Math.min(diffDays,10)+'/10</span></div>'
+      +'<div style="flex:1;min-width:200px;"><div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+barColor+';border-radius:4px;transition:width 0.5s;"></div></div></div>'
+      +'<div style="font-size:13px;color:#666;">Inizio: '+startDate+(remaining>0?' &middot; '+remaining+' giorni rimanenti':' &middot; <span style="color:#16a34a;">Completata</span>')+'</div>'
+      +'</div>';
+  } else {
+    windowEl.innerHTML = '<p style="color:#666;">Nessuna visita registrata ancora.</p>';
+  }
+
+  if(!events.length){
+    document.getElementById('funnel').innerHTML='<p style="color:#666">Nessun dato ancora. Visita la homepage per generare eventi.</p>';
+    document.getElementById('experiments').innerHTML='';
+    document.getElementById('recs').innerHTML='<p style="color:#666">Servono almeno 50 visite per raccomandazioni affidabili.</p>';
+    document.getElementById('trend').innerHTML='<p style="color:#666">Nessun dato.</p>';
+    return;
+  }
+
+  var dates = events.map(function(e){return e.date}).filter(Boolean);
+  var minDate = dates.sort()[0];
+  var maxDate = dates[dates.length-1];
+  document.getElementById('dateRange').textContent = minDate + ' \u2014 ' + maxDate + ' \u00b7 ' + events.length + ' eventi totali';
+
+  // Funnel
+  var views = events.filter(function(e){return e.event==='page_view'}).length;
+  var slides = events.filter(function(e){return e.event==='slide_view'}).length;
+  var formStarts = events.filter(function(e){return e.event==='form_start'}).length;
+  var formComplete = events.filter(function(e){return e.event==='form_complete'}).length;
+
+  var funnelSteps = [
+    {label:'Visite',count:views,color:'#4f46e5'},
+    {label:'Slide viste',count:slides,color:'#7c3aed'},
+    {label:'Form iniziato',count:formStarts,color:'#c026d3'},
+    {label:'Form completato',count:formComplete,color:'#16a34a'}
+  ];
+  var maxF = Math.max.apply(null,funnelSteps.map(function(s){return s.count}))||1;
+  var fhtml = '<div style="display:flex;flex-direction:column;gap:12px;">';
+  funnelSteps.forEach(function(s){
+    var pct = Math.round((s.count/maxF)*100);
+    var convPct = views>0 ? ((s.count/views)*100).toFixed(1) : '0';
+    fhtml += '<div style="display:flex;align-items:center;gap:14px;">'
+      +'<div style="width:120px;font-size:13px;color:#aaa;text-align:right;">'+s.label+'</div>'
+      +'<div style="flex:1;height:32px;background:#1a1a1a;border-radius:6px;overflow:hidden;position:relative;">'
+      +'<div style="width:'+pct+'%;height:100%;background:'+s.color+';border-radius:6px;transition:width 0.6s;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;color:#fff;min-width:40px;">'+s.count+'</div>'
+      +'</div>'
+      +'<div style="width:50px;text-align:right;font-size:12px;color:#666;">'+convPct+'%</div>'
+      +'</div>';
+  });
+  fhtml += '</div>';
+  document.getElementById('funnel').innerHTML = fhtml;
+
+  // Experiments — all 12
+  var ehtml = '';
+  ALL_EXPERIMENTS.forEach(function(exp){
+    var variantData = {};
+    events.forEach(function(ev){
+      if(!ev.variants||!ev.variants[exp])return;
+      var v = ev.variants[exp];
+      if(!variantData[v]) variantData[v]={views:0,form_start:0,form_complete:0};
+      if(ev.event==='page_view') variantData[v].views++;
+      if(ev.event==='form_start') variantData[v].form_start++;
+      if(ev.event==='form_complete') variantData[v].form_complete++;
+    });
+
+    var variants = Object.keys(variantData);
+    if (!variants.length) return;
+
+    // Find best conversion rate for lift calc
+    var bestRate = 0;
+    variants.forEach(function(v){
+      var r = variantData[v].views>0 ? variantData[v].form_start/variantData[v].views : 0;
+      if(r>bestRate) bestRate=r;
+    });
+
+    ehtml += '<div class="card"><h3>'+EXP_LABELS[exp]+' <span style="font-size:0.7rem;color:#444;font-weight:400;text-transform:none;letter-spacing:0;">('+exp+')</span></h3>';
+    ehtml += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">';
+    variants.forEach(function(v){
+      var d = variantData[v];
+      var convRate = d.views > 0 ? ((d.form_start/d.views)*100).toFixed(1) : '0';
+      var completeRate = d.views > 0 ? ((d.form_complete/d.views)*100).toFixed(1) : '0';
+      var thisRate = d.views>0 ? d.form_start/d.views : 0;
+      var isTop = thisRate === bestRate && variants.length > 1 && d.views >= 5;
+      var borderStyle = isTop ? 'border-color:#16a34a;' : '';
+      ehtml += '<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:16px;'+borderStyle+'">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+        +'<span style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;">'+v.replace(/_/g,' ')+'</span>'
+        +confidenceBadge(d.views)
+        +'</div>'
+        +'<div style="font-size:28px;font-weight:800;color:#fff;">'+d.views+'</div>'
+        +'<div style="font-size:12px;color:#666;margin-bottom:8px;">visite</div>'
+        +'<div style="display:flex;gap:12px;">'
+        +'<div><span style="font-size:16px;font-weight:700;color:#c026d3;">'+convRate+'%</span><br/><span style="font-size:11px;color:#666;">form start</span></div>'
+        +'<div><span style="font-size:16px;font-weight:700;color:#16a34a;">'+completeRate+'%</span><br/><span style="font-size:11px;color:#666;">complete</span></div>'
+        +'</div></div>';
+    });
+    ehtml += '</div></div>';
+  });
+  document.getElementById('experiments').innerHTML = ehtml;
+
+  // Recommendations — with Winner detection
+  var rhtml = '';
+  ALL_EXPERIMENTS.forEach(function(exp){
+    var variantData = {};
+    events.forEach(function(ev){
+      if(!ev.variants||!ev.variants[exp])return;
+      var v = ev.variants[exp];
+      if(!variantData[v]) variantData[v]={views:0,form_start:0};
+      if(ev.event==='page_view') variantData[v].views++;
+      if(ev.event==='form_start') variantData[v].form_start++;
+    });
+    var vkeys = Object.keys(variantData);
+    if(vkeys.length < 2) return;
+    var totalViews = vkeys.reduce(function(s,v){return s+variantData[v].views},0);
+    if(totalViews < 20){
+      rhtml += '<div style="padding:12px;background:#1a1a1a;border-radius:8px;margin-bottom:8px;font-size:13px;color:#666;">'
+        +'<strong style="color:#aaa;">'+EXP_LABELS[exp]+'</strong> \u2014 serve pi\u00f9 traffico ('+totalViews+'/50 visite minime)</div>';
+      return;
+    }
+
+    var best = null, bestRate = -1;
+    vkeys.forEach(function(v){
+      var rate = variantData[v].views>0 ? variantData[v].form_start/variantData[v].views : 0;
+      if(rate > bestRate){bestRate=rate;best=v;}
+    });
+
+    // Find worst for lift calc
+    var worstRate = Infinity;
+    vkeys.forEach(function(v){
+      if(v===best) return;
+      var rate = variantData[v].views>0 ? variantData[v].form_start/variantData[v].views : 0;
+      if(rate < worstRate) worstRate = rate;
+    });
+    if (worstRate === Infinity) worstRate = 0;
+
+    var lift = worstRate > 0 ? (((bestRate-worstRate)/worstRate)*100).toFixed(0) : (bestRate > 0 ? '\u221e' : '0');
+    var liftNum = parseFloat(lift) || 0;
+    var isWinner = liftNum >= 15 && variantData[best].views >= 100;
+
+    var emoji = isWinner ? '\ud83c\udfc6' : liftNum > 10 ? '\ud83d\ude80' : liftNum > 0 ? '\ud83d\udcc8' : '\u2696\ufe0f';
+    var borderColor = isWinner ? '#16a34a' : liftNum > 10 ? '#16a34a' : '#ca8a04';
+
+    rhtml += '<div style="padding:14px;background:#1a1a1a;border-radius:8px;margin-bottom:8px;border-left:3px solid '+borderColor+';">'
+      +'<div style="font-size:14px;font-weight:600;color:#fff;">'+emoji+' '+EXP_LABELS[exp]
+      +(isWinner ? ' <span style="background:#16a34a;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:6px;">Winner: '+best.replace(/_/g,' ')+'</span>' : '')
+      +'</div>'
+      +'<div style="font-size:13px;color:#aaa;margin-top:4px;"><strong style="color:#fff;">'+best.replace(/_/g,' ')+'</strong> converte '+lift+'% meglio ('+(bestRate*100).toFixed(1)+'%)</div>'
+      +'<div style="font-size:12px;color:#666;margin-top:4px;">'+variantData[best].views+' visite &middot; '+confidenceBadge(variantData[best].views)+'</div>'
+      +'</div>';
+  });
+  document.getElementById('recs').innerHTML = rhtml || '<p style="color:#666">Servono pi\u00f9 dati per generare raccomandazioni.</p>';
+
+  // Daily trend
+  var dailyCounts = {};
+  events.filter(function(e){return e.event==='page_view'}).forEach(function(e){
+    if(!e.date)return;
+    dailyCounts[e.date] = (dailyCounts[e.date]||0)+1;
+  });
+  var days = Object.keys(dailyCounts).sort();
+  if(days.length > 1){
+    var vals = days.map(function(d){return dailyCounts[d]});
+    var max = Math.max.apply(null,vals)||1;
+    var w = 600, h = 80, pad = 4;
+    var points = vals.map(function(v,i){
+      return (pad + i/(vals.length-1)*(w-pad*2))+','+(pad + (1-v/max)*(h-pad*2));
+    }).join(' ');
+    var svg = '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:80px;" preserveAspectRatio="none">'
+      +'<polyline points="'+points+'" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+      +'</svg>';
+    var labels = '<div style="display:flex;justify-content:space-between;font-size:11px;color:#555;margin-top:4px;">'
+      +'<span>'+days[0]+'</span><span>'+days[days.length-1]+'</span></div>';
+    document.getElementById('trend').innerHTML = svg + labels;
+  } else {
+    document.getElementById('trend').innerHTML = '<p style="color:#666">Serve almeno 2 giorni di dati per il trend.</p>';
+  }
+}
+
+// Export CSV
+function exportCSV(){
+  var events = getEvents();
+  if(!events.length){alert('Nessun dato da esportare.');return;}
+  var rows = [['timestamp','date','event','url'].concat(ALL_EXPERIMENTS).join(',')];
+  events.forEach(function(ev){
+    var row = [
+      '"'+ev.timestamp+'"',
+      ev.date,
+      ev.event,
+      '"'+(ev.url||'')+'"'
+    ];
+    ALL_EXPERIMENTS.forEach(function(exp){
+      row.push(ev.variants && ev.variants[exp] ? ev.variants[exp] : '');
+    });
+    rows.push(row.join(','));
+  });
+  var blob = new Blob([rows.join('\n')], {type:'text/csv'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'vdp-ab-export-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+
+<style>
+  body { margin:0; }
+  .card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #666;
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+</style>
+
+</BaseLayout>

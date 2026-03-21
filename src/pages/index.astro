@@ -93,7 +93,7 @@ import { STYLES } from '../data/styles';
         <div><span style="font-size:1.3rem;">🚗</span> <strong style="color:var(--bg);">Zone consegna</strong><br/><span class="t-small" style="color:rgba(255,255,255,0.4);">Prezzi per zona.</span></div>
       </div>
       <div class="gap-lg"></div>
-      <a href="https://micmer-lulivo.github.io/lulivo/menu/" target="_blank" class="cta cta-ghost reveal-text d3" style="color:var(--bg);border-color:rgba(255,255,255,0.3);">Vedi demo live</a>
+      <a href="https://lulivo.pages.dev/menu/" target="_blank" class="cta cta-ghost reveal-text d3" style="color:var(--bg);border-color:rgba(255,255,255,0.3);">Vedi demo live</a>
     </div>
   </div>
 
@@ -302,6 +302,11 @@ import { STYLES } from '../data/styles';
   function go(n) {
     if (n < 0 || n >= TOTAL) return;
     if (submitted && n < TOTAL - 1) return; // lock after submit
+    // A/B tracking
+    if (window.ABTesting) {
+      window.ABTesting.trackSlide(n);
+      if (n === LAST_FORM) window.ABTesting.trackFormComplete();
+    }
     if (n > cur && n >= 4) {
       // validate required fields on current form slide
       const pg = slides[cur];

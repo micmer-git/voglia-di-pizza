@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://voglia-di-pizza.pages.dev/sitemap.xml

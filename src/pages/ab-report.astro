@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="A/B Report — Voglia di Pizza" description="Report completo esperimenti A/B">
+
+<div id="auth" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff;">
+  <div style="text-align:center;">
+    <h2 style="color:#111;font-family:system-ui;margin-bottom:1rem;">A/B Report</h2>
+    <input type="password" id="pw" placeholder="Password" style="padding:10px 16px;border-radius:8px;border:1px solid #ddd;background:#f9f9f9;color:#111;font-size:15px;outline:none;" />
+    <button onclick="tryLogin()" style="margin-left:8px;padding:10px 20px;border-radius:8px;border:none;background:#4f46e5;color:#fff;font-weight:600;cursor:pointer;">Accedi</button>
+    <p id="authErr" style="color:#f43f5e;margin-top:0.5rem;font-size:13px;display:none;">Password errata</p>
+  </div>
+</div>
+
+<div id="report" style="display:none;min-height:100vh;background:#fff;color:#111;font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding:2rem;">
+  <div style="max-width:900px;margin:0 auto;">
+
+    <div class="report-header">
+      <h1>A/B Testing Report</h1>
+      <p class="subtitle">Voglia di Pizza</p>
+      <p class="meta" id="reportMeta"></p>
+    </div>
+
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <div id="expTables"></div>
+
+    <div class="no-print" style="text-align:center;margin:2rem 0;">
+      <button onclick="window.print()" class="print-btn">Stampa / Salva PDF</button>
+      <a href="/ab-dashboard" class="back-link">Torna alla Dashboard</a>
+    </div>
+
+    <div style="text-align:center;padding:2rem 0 1rem;font-size:0.7rem;color:#ccc;">
+      Generato il <span id="genDate"></span> &middot; developed by micmer
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+var ALL_EXPERIMENTS = [
+  'headline','cta_text','meta_description','tagline_hero','problem_framing',
+  'social_proof_position','step_labels','submit_cta','pricing_hint',
+  'form_order','hero_subtext','trust_footer'
+];
+var EXP_LABELS = {
+  headline:'Headline',cta_text:'Testo CTA',meta_description:'Meta Description',
+  tagline_hero:'Tagline Hero',problem_framing:'Problem Framing',
+  social_proof_position:'Social Proof Position',step_labels:'Step Labels',
+  submit_cta:'Submit CTA',pricing_hint:'Pricing Hint',form_order:'Form Order',
+  hero_subtext:'Hero Subtext',trust_footer:'Trust Footer'
+};
+
+function tryLogin(){
+  if(document.getElementById('pw').value==='pizzeria2026'){
+    document.getElementById('auth').style.display='none';
+    document.getElementById('report').style.display='block';
+    buildReport();
+  } else {
+    document.getElementById('authErr').style.display='block';
+  }
+}
+document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin()});
+
+function getEvents(){
+  try{return JSON.parse(localStorage.getItem('vdp_ab_events')||'[]')}catch(e){return[]}
+}
+
+function buildReport(){
+  var events = getEvents();
+  var startDate = localStorage.getItem('vdp_ab_start') || 'N/A';
+  var now = new Date();
+  document.getElementById('genDate').textContent = now.toISOString().slice(0,10);
+
+  var daysDiff = startDate !== 'N/A' ? Math.floor((now - new Date(startDate)) / 86400000) + 1 : 0;
+  var totalViews = events.filter(function(e){return e.event==='page_view'}).length;
+  var totalComplete = events.filter(function(e){return e.event==='form_complete'}).length;
+  var globalConv = totalViews > 0 ? ((totalComplete/totalViews)*100).toFixed(1) : '0';
+
+  document.getElementById('reportMeta').textContent = 'Periodo: ' + startDate + ' \u2014 ' + now.toISOString().slice(0,10);
+
+  // Summary
+  document.getElementById('summaryGrid').innerHTML =
+    '<div class="sum-card"><div class="sum-num">12</div><div class="sum-label">Esperimenti</div></div>'
+    +'<div class="sum-card"><div class="sum-num">'+Math.min(daysDiff,10)+'/10</div><div class="sum-label">Giorni finestra</div></div>'
+    +'<div class="sum-card"><div class="sum-num">'+totalViews+'</div><div class="sum-label">Visite totali</div></div>'
+    +'<div class="sum-card"><div class="sum-num">'+globalConv+'%</div><div class="sum-label">Conv. globale</div></div>';
+
+  // Per-experiment tables
+  var html = '';
+  ALL_EXPERIMENTS.forEach(function(exp){
+    var variantData = {};
+    events.forEach(function(ev){
+      if(!ev.variants||!ev.variants[exp])return;
+      var v = ev.variants[exp];
+      if(!variantData[v]) variantData[v]={views:0,form_start:0,form_complete:0};
+      if(ev.event==='page_view') variantData[v].views++;
+      if(ev.event==='form_start') variantData[v].form_start++;
+      if(ev.event==='form_complete') variantData[v].form_complete++;
+    });
+
+    var vkeys = Object.keys(variantData);
+    if (!vkeys.length) {
+      html += '<div class="exp-section"><h3>'+EXP_LABELS[exp]+'</h3><p style="color:#999;font-size:13px;">Nessun dato.</p></div>';
+      return;
+    }
+
+    // Find baseline (first variant) for lift calc
+    var baseRate = 0;
+    if (vkeys.length > 0 && variantData[vkeys[0]].views > 0) {
+      baseRate = variantData[vkeys[0]].form_start / variantData[vkeys[0]].views;
+    }
+
+    html += '<div class="exp-section"><h3>'+EXP_LABELS[exp]+' <span style="color:#999;font-weight:400;font-size:0.8rem;">('+exp+')</span></h3>';
+    html += '<table><thead><tr><th>Variante</th><th>Visite</th><th>Form Start</th><th>Conv%</th><th>Complete</th><th>Lift</th><th>Status</th></tr></thead><tbody>';
+
+    vkeys.forEach(function(v, idx){
+      var d = variantData[v];
+      var conv = d.views>0 ? ((d.form_start/d.views)*100).toFixed(1) : '0.0';
+      var compRate = d.views>0 ? ((d.form_complete/d.views)*100).toFixed(1) : '0.0';
+      var thisRate = d.views>0 ? d.form_start/d.views : 0;
+      var lift = idx === 0 ? 'baseline' : (baseRate > 0 ? ((thisRate-baseRate)/baseRate*100).toFixed(0)+'%' : (thisRate > 0 ? '+\u221e' : '0%'));
+      var liftNum = idx === 0 ? 0 : (baseRate > 0 ? (thisRate-baseRate)/baseRate*100 : 0);
+
+      var status = '';
+      if (d.views < 50) {
+        status = '<span class="badge badge-warn">Dati insufficienti</span>';
+      } else if (d.views < 100) {
+        status = '<span class="badge badge-info">In raccolta</span>';
+      } else if (idx > 0 && liftNum >= 15) {
+        status = '<span class="badge badge-win">Winner</span>';
+      } else {
+        status = '<span class="badge badge-ok">OK</span>';
+      }
+
+      html += '<tr><td><strong>'+v.replace(/_/g,' ')+'</strong></td><td>'+d.views+'</td><td>'+d.form_start+'</td><td>'+conv+'%</td><td>'+compRate+'%</td><td>'+lift+'</td><td>'+status+'</td></tr>';
+    });
+
+    html += '</tbody></table></div>';
+  });
+
+  document.getElementById('expTables').innerHTML = html;
+}
+</script>
+
+<style>
+  body { margin:0; }
+
+  .report-header { text-align:center; margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:2px solid #eee; }
+  .report-header h1 { font-size:1.8rem; font-weight:800; margin:0 0 4px; color:#111; }
+  .report-header .subtitle { font-size:1rem; color:#666; margin:0 0 8px; }
+  .report-header .meta { font-size:0.85rem; color:#999; margin:0; }
+
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:2rem; }
+  .sum-card { background:#f8f8f8; border:1px solid #eee; border-radius:10px; padding:16px; text-align:center; }
+  .sum-num { font-size:1.8rem; font-weight:800; color:#111; }
+  .sum-label { font-size:0.75rem; color:#888; text-transform:uppercase; letter-spacing:0.5px; margin-top:4px; }
+
+  .exp-section { margin-bottom:1.5rem; }
+  .exp-section h3 { font-size:1rem; font-weight:700; margin:0 0 8px; color:#111; }
+
+  table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  thead { background:#f5f5f5; }
+  th { text-align:left; padding:8px 10px; font-weight:600; color:#555; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid #ddd; }
+  td { padding:8px 10px; border-bottom:1px solid #eee; color:#333; }
+
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600; }
+  .badge-warn { background:#fef3c7; color:#92400e; }
+  .badge-info { background:#dbeafe; color:#1e40af; }
+  .badge-ok { background:#f0fdf4; color:#166534; }
+  .badge-win { background:#16a34a; color:#fff; }
+
+  .print-btn { padding:12px 32px; border-radius:8px; border:none; background:#4f46e5; color:#fff; font-size:0.95rem; font-weight:600; cursor:pointer; margin-right:12px; }
+  .print-btn:hover { background:#4338ca; }
+  .back-link { color:#4f46e5; text-decoration:none; font-size:0.9rem; }
+
+  @media print {
+    .no-print { display:none !important; }
+    body { font-size:11px; }
+    .report-header { margin-bottom:1rem; padding-bottom:0.5rem; }
+    .sum-card { padding:8px; }
+    .sum-num { font-size:1.2rem; }
+    .exp-section { page-break-inside:avoid; }
+    table { font-size:10px; }
+    th, td { padding:4px 6px; }
+  }
+
+  @media(max-width:600px){
+    .summary-grid { grid-template-columns:repeat(2,1fr); }
+    table { font-size:0.75rem; }
+    th, td { padding:6px 4px; }
+  }
+</style>
+
+</BaseLayout>
