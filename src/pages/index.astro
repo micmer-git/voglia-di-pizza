@@ -392,6 +392,8 @@ import { STYLES } from '../data/styles';
   }
 
   // Submit
+  var PIZZA_GETFORM_URL = 'https://getform.io/f/GETFORM_PIZZA_ID';
+
   document.getElementById('F').addEventListener('submit', async function(e) {
     e.preventDefault();
     var em = document.getElementById('email');
@@ -402,12 +404,31 @@ import { STYLES } from '../data/styles';
     fd.append('_subject', 'Nuova pizzeria: ' + fd.get('nome'));
     fd.append('_captcha', 'false');
     fd.append('_template', 'box');
+
+    // Build payload for Getform (clean data without formsubmit fields)
+    var getformPayload = {};
+    var fields = ['nome','tagline','indirizzo','telefono','whatsapp','orari','chiusura','consegna','instagram','stile','email','menuNote','note'];
+    fields.forEach(function(f) { if (fd.get(f)) getformPayload[f] = fd.get(f); });
+    getformPayload.source = 'voglia-di-pizza';
+
+    var sends = [
+      fetch('https://formsubmit.co/ajax/michelemerelli.8@gmail.com', { method: 'POST', body: fd })
+    ];
+    if (PIZZA_GETFORM_URL.indexOf('REPLACE_ME') === -1 && PIZZA_GETFORM_URL.indexOf('GETFORM_PIZZA_ID') === -1) {
+      sends.push(fetch(PIZZA_GETFORM_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(getformPayload)
+      }));
+    }
+
     try {
-      var r = await fetch('https://formsubmit.co/ajax/michelemerelli.8@gmail.com', { method: 'POST', body: fd });
-      if (!r.ok) throw 0;
+      var results = await Promise.allSettled(sends);
+      var anyOk = results.some(function(r) { return r.status === 'fulfilled' && r.value && r.value.ok; });
+      if (!anyOk) throw 0;
     } catch (err) {
-      var fields = ['nome','tagline','indirizzo','telefono','whatsapp','orari','chiusura','consegna','instagram','stile','email','menuNote','note'];
-      var body = fields.map(function(f) { return f + ': ' + (fd.get(f) || '\u2014'); }).join('\n');
+      var bodyFields = ['nome','tagline','indirizzo','telefono','whatsapp','orari','chiusura','consegna','instagram','stile','email','menuNote','note'];
+      var body = bodyFields.map(function(f) { return f + ': ' + (fd.get(f) || '\u2014'); }).join('\n');
       window.open('mailto:michelemerelli.8@gmail.com?subject=' + encodeURIComponent('Nuova pizzeria: ' + fd.get('nome')) + '&body=' + encodeURIComponent(body));
     }
     submitted = true;
