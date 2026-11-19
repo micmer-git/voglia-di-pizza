@@ -605,7 +605,7 @@ function playFilm(name: string, onDone: () => void) {
   }
   video.addEventListener('ended', finish);
   video.addEventListener('error', finish);
-  window.setTimeout(finish, 5000);
+  window.setTimeout(finish, 7000);
   video.play().catch(finish);
 }
 
