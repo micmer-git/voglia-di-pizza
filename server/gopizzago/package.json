@@ -1,0 +1,13 @@
+{
+  "name": "gopizzago-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "deploy": "bash deploy.sh",
+    "test": "node --test test/api.test.mjs"
+  },
+  "dependencies": {
+    "wrangler": "^4.165.0"
+  }
+}

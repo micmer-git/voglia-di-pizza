@@ -1,3 +1,9 @@
+# Voglia di Pizza
+
+Sito Astro. **GoPizzaGo** (`/gopizzago/`) è la pagina per la pizza dell’amicizia: gli amici compongono la pizza, Michele vede la lista della spesa.
+
+Il backend è un Worker Cloudflare in `server/gopizzago`. Senza `apiBase` in `public/gopizzago/config.json` la pagina funziona solo su quel telefono e lo dice. Per pubblicare il forno condiviso: `cd server/gopizzago && npm run deploy` (servono `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` e `ADMIN_PIN`).
+
 # Astro Starter Kit: Minimal
 
 ```sh

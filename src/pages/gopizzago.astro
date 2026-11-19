@@ -1,0 +1,34 @@
+---
+// GoPizzaGo. CSS e JS sono file fratelli in public/gopizzago, con URL relativi,
+// così la pagina funziona sia su GitHub Pages (/voglia-di-pizza/) sia su pages.dev.
+---
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#c4322a" />
+  <title>GoPizzaGo — la pizza dell’amicizia</title>
+  <meta name="description" content="Scegli la pizza per la serata di Michele: base rossa, bianca o pesto, condimenti e varianti. Il forno vede tutto in un colpo solo." />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./app.css" />
+  <script is:inline>
+    (function () {
+      var path = location.pathname;
+      if (!path.endsWith('/') && !path.endsWith('/index.html')) {
+        location.replace(path + '/' + location.search + location.hash);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <noscript><p>Per comporre la pizza serve JavaScript.</p></noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
