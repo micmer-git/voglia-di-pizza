@@ -5,6 +5,7 @@ import type { Half, Ingredient, Pizza } from './types';
 
 const TOKEN_KEY = 'gopizzago.token';
 const STORY_KEY = 'gopizzago.story';
+const DONE_KEY = 'gopizzago.done';
 const LOCAL_KEY = 'gopizzago.local';
 const PIN_KEY = 'gopizzago.pin';
 
@@ -79,6 +80,10 @@ const state: {
   story: boolean;
   storyStep: number;
   ordersNote: string;
+  phase: 'wizard' | 'oven' | 'done' | 'list';
+  step: number;
+  focusHalf: 'left' | 'right';
+  undo: { side: 'left' | 'right'; id: string }[];
 } = {
   screen: 'loading',
   apiBase: '',
@@ -102,6 +107,10 @@ const state: {
   story: false,
   storyStep: 0,
   ordersNote: '',
+  phase: 'wizard',
+  step: 0,
+  focusHalf: 'left',
+  undo: [],
 };
 
 let frame = { entrance: false, freshIds: [] as string[] };
@@ -433,22 +442,22 @@ function banner(): string {
 function shell(): string {
   return `<div class="wrap">
     <header class="top">
-      <div class="brand"><span class="logo-mark">GO</span><span><strong>PizzaGo</strong><em>pizza dell’amicizia</em></span></div>
+      <div class="brand"><strong>GoPizzaGo</strong></div>
       <nav class="nav">
         <a href="../">Sito</a>
         <a href="#tutti">Tutti</a>
         ${state.token || state.name ? '<button class="ghost" type="button" data-action="logout">Esci</button>' : ''}
       </nav>
     </header>
-    ${state.story ? storyOverlay() : ''}
+    <div id="skydive" class="skydive" aria-hidden="true"></div>
     <div id="view">${view()}</div>
-    <p class="foot">Forno di Michele · lancia i condimenti</p>
+    <p class="foot">Gozzandogo · il forno è acceso</p>
     <div id="toast" class="toast" role="status" ${state.toast ? '' : 'hidden'}></div>
   </div>`;
 }
 
 const STORIES = [
-  { kicker: '1 · Benvenuto', title: 'Pizza dell’amicizia', text: 'Michele accende il forno. Stasera ognuno si fa la sua, senza app e senza PIN.' },
+  { kicker: '1 · Benvenuto', title: 'GoPizzaGo', text: 'Gozzandogo accende il forno. Stasera ognuno si fa la sua, senza app e senza PIN.' },
   { kicker: '2 · La base', title: 'Rossa o bianca', text: 'Scegli la base. Il disco gira e la pizza cambia faccia sotto le mani.' },
   { kicker: '3 · I condimenti', title: 'Lanciali sopra', text: 'Olive, zola, porcini, cipolle. Cadono sulla pizza. Il pesto non c’è: non l’abbiamo.' },
   { kicker: '4 · Il tavolo', title: 'Si vede tutto', text: 'Salva e scorri: le pizze di tutti e lo scontrino della spesa, in chiaro.' },
@@ -484,7 +493,115 @@ function endStory() {
 
 function view(): string {
   if (state.screen === 'loading') return loadingView();
-  return builderView();
+  if (state.phase === 'oven') return ovenView();
+  if (state.phase === 'done') return successView();
+  if (state.phase === 'list') return listView();
+  return wizardView();
+}
+
+const WIZARD = ['Nome', 'Base', 'Condimenti', 'Conferma', 'Inforna'];
+
+function wizardView(): string {
+  const step = state.step;
+  const bars = WIZARD.map((_, i) => `<span class="${i < step ? 'done' : ''} ${i === step ? 'on' : ''}"></span>`).join('');
+  return `<section class="wizard">
+    <div class="bars" aria-hidden="true">${bars}</div>
+    <p class="step-label">Passo ${step + 1} di ${WIZARD.length} · ${WIZARD[step]}</p>
+    <div class="stage wizard-stage">${svg(state.draft, `live-${state.draft.id}`, true)}<p class="caption">${esc(describe(state.draft))}</p></div>
+    <div class="ask">${wizardAsk()}</div>
+    <div class="wizard-nav">
+      ${step > 0 ? '<button type="button" class="ghost" data-action="wizard-back">Indietro</button>' : ''}
+      ${step < 4 ? '<button type="button" class="btn" data-action="wizard-next">Avanti</button>' : `<button type="button" class="btn" data-action="submit" ${state.busy ? 'disabled' : ''}>${state.busy ? 'Inforno…' : 'Inforna'}</button>`}
+    </div>
+  </section>`;
+}
+
+function wizardAsk(): string {
+  const draft = state.draft;
+  if (state.step === 0) {
+    return `<h2>Come ti chiami?</h2><p>Un nome. Niente password.</p>
+      <label class="field"><span>Nome</span><input id="f-name" data-field="gate-name" maxlength="40" autocomplete="name" placeholder="Giulia" value="${esc(state.name)}"></label>`;
+  }
+  if (state.step === 1) {
+    const choice = draft.split ? 'meta' : draft.left.base;
+    const btn = (id: string, label: string) =>
+      `<button type="button" class="choice" data-action="pick-base" data-base="${id}" aria-pressed="${choice === id}">${label}</button>`;
+    return `<h2>Che base?</h2><p>Rossa, bianca, oppure tagliata a metà.</p><div class="choices">${btn('rossa', 'Rossa')}${btn('bianca', 'Bianca')}${btn('meta', 'Metà e metà')}</div>`;
+  }
+  if (state.step === 2) {
+    const side = draft.split ? state.focusHalf : 'left';
+    const half = draft[side];
+    return `<h2>Condimenti</h2><p>Parti da una classica, oppure componi tu.</p>
+      ${draft.split ? `<div class="choices compact">${['left', 'right'].map((h) => `<button type="button" class="choice" data-action="focus-half" data-half="${h}" aria-pressed="${state.focusHalf === h}">${h === 'left' ? 'Metà rossa' : 'Metà bianca'}</button>`).join('')}</div>` : ''}
+      <div class="presets">${usablePresets().map((preset) => `<button type="button" class="preset" data-action="preset" data-id="${esc(preset.id)}" aria-pressed="${draft.preset === preset.id}">${esc(preset.name)}</button>`).join('')}</div>
+      <div class="chips">${activeToppings().map((ing) => `<button type="button" class="chip" data-action="toggle-topping" data-half="${side}" data-id="${esc(ing.id)}" aria-pressed="${half.toppingIds.includes(ing.id)}">${chipIcon(ing.shape, ing.color)}<span>${esc(toppingName(ing.id))}</span></button>`).join('')}</div>`;
+  }
+  if (state.step === 3) {
+    const blocks = (draft.split ? (['left', 'right'] as const) : (['left'] as const)).map((side) => {
+      const ids = draft[side].toppingIds;
+      const title = draft.split ? (side === 'left' ? 'Metà rossa' : 'Metà bianca') : 'Sulla pizza';
+      return `<div class="confirm-block"><h3>${title}</h3>${ids.length === 0 ? '<p>Solo la base. Pulita.</p>' : `<div class="chips">${ids.map((id) => `<button type="button" class="chip" data-action="remove-top" data-half="${side}" data-id="${esc(id)}" aria-pressed="true"><span>${esc(toppingName(id))}</span><span class="x">×</span></button>`).join('')}</div>`}</div>`;
+    }).join('');
+    return `<h2>Confermi?</h2><p>Tocca un condimento per toglierlo.</p>${blocks}
+      <button type="button" class="ghost" data-action="undo" ${state.undo.length ? '' : 'disabled'}>Annulla l’ultimo</button>`;
+  }
+  return `<h2>Si inforna</h2><p>${esc(describe(draft))}</p>
+    <label class="field"><span>Note per Gozzandogo</span><textarea id="f-notes" data-field="notes" maxlength="280" placeholder="ben cotta, poco sale…">${esc(draft.notes)}</textarea></label>`;
+}
+
+function ovenView(): string {
+  return `<section class="oven-scene" aria-label="La pizza entra nel forno">
+    <div class="oven-mouth">
+      <div class="flames"></div>
+      <div class="oven-pizza">${svg(state.draft, 'oven', false)}</div>
+      <div class="peel"></div>
+    </div>
+    <p class="oven-caption">Gozzandogo la spinge dentro</p>
+  </section>`;
+}
+
+function successView(): string {
+  return `<section class="success">
+    <p class="story-kicker">In forno</p>
+    <h2>Ci siamo.</h2>
+    <p>La pizza di ${esc(state.name || 'te')} è nel forno a legna.</p>
+    <button type="button" class="btn big" data-action="open-list">Guarda la lista ingredienti</button>
+  </section>`;
+}
+
+function listView(): string {
+  return `<section class="after">
+    <div class="wizard-nav">
+      <button type="button" class="ghost" data-action="edit-mine">Modifica la mia</button>
+      <button type="button" class="btn" data-action="add-another">Aggiungine un’altra</button>
+    </div>
+    ${ordersSection()}
+  </section>`;
+}
+
+function launchSkydiver() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const el = document.getElementById('skydive');
+  if (!el) return;
+  el.innerHTML = `<svg viewBox="0 0 80 110" width="72" height="100"><path d="M10 28 C20 4 60 4 70 28 C55 18 25 18 10 28 Z" fill="#ffc83d" stroke="#140e0c" stroke-width="2"/><path d="M18 28 L38 70 M62 28 L42 70" stroke="#fff3df" stroke-width="1.4"/><circle cx="40" cy="78" r="8" fill="#ff2a2a" stroke="#140e0c" stroke-width="2"/><path d="M32 86 l8 16 8-16" fill="#fff3df" stroke="#140e0c" stroke-width="1.5"/></svg>`;
+  el.classList.remove('run');
+  void el.offsetWidth;
+  el.classList.add('run');
+}
+
+function startOven() {
+  lsSet(DONE_KEY, '1');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    state.phase = 'done';
+    paint();
+    return;
+  }
+  state.phase = 'oven';
+  paint();
+  window.setTimeout(() => {
+    state.phase = 'done';
+    paint();
+  }, 1700);
 }
 
 function loadingView(): string {
@@ -493,7 +610,7 @@ function loadingView(): string {
 
 function gateView(): string {
   return `<section class="gate">
-    <div class="stage">${svg(SHOWPIECE, 'gate', true)}<p class="caption">La pizza dell’amicizia è già in pista</p></div>
+    <div class="stage">${svg(SHOWPIECE, 'gate', true)}<p class="caption">GoPizzaGo è già in pista</p></div>
     ${banner()}
     <div class="gate-card">
       <h1>Chi pizza?</h1>
@@ -755,7 +872,7 @@ async function persistName() {
 
 async function saveDraft(asVariant: boolean) {
   if (state.draft.left.base === 'altro' && !state.draft.left.baseNote.trim()) {
-    toast('Scrivi la base, per esempio pesto');
+    toast('Scrivi come si chiama la base');
     return;
   }
   if (state.draft.split && state.draft.right.base === 'altro' && !state.draft.right.baseNote.trim()) {
@@ -776,8 +893,7 @@ async function saveDraft(asVariant: boolean) {
     writeLocal();
     toast('Infornata sul telefono');
     await loadOverview(false);
-    paint();
-    celebrate();
+    startOven();
     return;
   }
   state.busy = true;
@@ -807,9 +923,10 @@ async function saveDraft(asVariant: boolean) {
     toast(err instanceof Error ? err.message : 'Non sono riuscito a salvare');
   } finally {
     state.busy = false;
-    if (cheered) await loadOverview(false);
-    paint();
-    if (cheered) celebrate();
+    if (cheered) {
+      await loadOverview(false);
+      startOven();
+    } else paint();
   }
 }
 
@@ -864,14 +981,13 @@ async function loadOverview(repaint = true) {
 function applyPreset(id: string) {
   const preset = PRESETS.find((item) => item.id === id);
   if (!preset) return;
+  const side = state.draft.split ? state.focusHalf : 'left';
+  state.draft[side].toppingIds = [...preset.toppings];
   state.draft.preset = preset.id;
-  state.draft.left = { base: preset.base, baseNote: preset.baseNote, toppingIds: [...preset.toppings] };
-  state.draft.split = false;
   if (!state.draft.label) state.draft.label = preset.name;
   state.freshIds = [...preset.toppings];
   state.dirty = true;
   paint();
-  spinPizza();
 }
 
 function toggleTopping(side: 'left' | 'right', id: string) {
@@ -905,6 +1021,94 @@ async function onClick(ev: Event) {
   const id = button.dataset.id || '';
   if (swiped) {
     swiped = false;
+    return;
+  }
+  if (action === 'wizard-back') {
+    state.step = Math.max(0, state.step - 1);
+    paint();
+    launchSkydiver();
+    return;
+  }
+  if (action === 'wizard-next') {
+    if (state.step === 0 && !state.name.trim()) {
+      toast('Come ti chiami?');
+      return;
+    }
+    state.step = Math.min(4, state.step + 1);
+    paint();
+    launchSkydiver();
+    return;
+  }
+  if (action === 'pick-base') {
+    const base = button.dataset.base;
+    if (base === 'meta') {
+      state.draft.split = true;
+      state.draft.left.base = 'rossa';
+      state.draft.right.base = 'bianca';
+      state.draft.right.toppingIds = state.draft.right.toppingIds.length ? state.draft.right.toppingIds : [];
+    } else if (base === 'rossa' || base === 'bianca') {
+      state.draft.split = false;
+      state.draft.left.base = base;
+    } else return;
+    state.dirty = true;
+    paint();
+    spinPizza();
+    return;
+  }
+  if (action === 'focus-half') {
+    state.focusHalf = button.dataset.half === 'right' ? 'right' : 'left';
+    paint();
+    return;
+  }
+  if (action === 'remove-top') {
+    const side = button.dataset.half === 'right' ? 'right' : 'left';
+    const half = state.draft[side];
+    if (!half.toppingIds.includes(id)) return;
+    half.toppingIds = half.toppingIds.filter((item) => item !== id);
+    state.undo.push({ side, id });
+    state.dirty = true;
+    paint();
+    return;
+  }
+  if (action === 'undo') {
+    const last = state.undo.pop();
+    if (!last) return;
+    const half = state.draft[last.side];
+    if (!half.toppingIds.includes(last.id)) half.toppingIds.push(last.id);
+    state.freshIds = [last.id];
+    paint();
+    return;
+  }
+  if (action === 'submit') {
+    if (!state.name.trim()) {
+      state.step = 0;
+      toast('Come ti chiami?');
+      paint();
+      return;
+    }
+    await saveDraft(false);
+    return;
+  }
+  if (action === 'open-list') {
+    state.phase = 'list';
+    await loadOverview();
+    return;
+  }
+  if (action === 'edit-mine') {
+    const mine = state.pizzas[0];
+    if (mine) state.draft = structuredClone(mine);
+    state.step = 1;
+    state.phase = 'wizard';
+    state.undo = [];
+    paint();
+    return;
+  }
+  if (action === 'add-another') {
+    state.draft = blankPizza();
+    state.step = 1;
+    state.phase = 'wizard';
+    state.undo = [];
+    paint();
     return;
   }
   if (action === 'story-skip') {
@@ -1283,8 +1487,9 @@ async function init() {
       state.entrance = true;
     } else state.screen = 'builder';
   } else state.screen = 'builder';
-  state.story = lsGet(STORY_KEY) !== '1';
+  state.story = false;
   await loadOverview(false);
+  if ((state.token || state.name) && lsGet(DONE_KEY) === '1') state.phase = 'list';
   paint();
 }
 

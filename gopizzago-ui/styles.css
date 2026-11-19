@@ -457,12 +457,121 @@ fieldset.half {
   0% { transform: translateY(0) rotate(0); opacity: 1; }
   100% { transform: translateY(88vh) rotate(220deg); opacity: 0.2; }
 }
+.wizard { min-height: calc(100dvh - 72px); display: flex; flex-direction: column; gap: 8px; }
+.step-label { margin: 0; font-family: var(--sticker); letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
+.wizard-stage { padding: 6px; }
+.wizard-stage .pizza-svg { width: min(100%, 74vw); margin: 0 auto; }
+.ask h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 11vw, 3.8rem);
+  line-height: 0.92;
+  color: white;
+  text-shadow: 3px 3px 0 var(--tomato-deep);
+  margin: 0 0 6px;
+}
+.ask > p { color: var(--cream-2); margin: 0 0 10px; }
+.choices { display: grid; gap: 10px; }
+.choices.compact { grid-template-columns: 1fr 1fr; }
+.choice {
+  min-height: 64px;
+  border-radius: 18px;
+  border: 3px solid var(--char);
+  background: var(--cream);
+  color: var(--char);
+  font-family: var(--sticker);
+  font-size: 1.35rem;
+  box-shadow: var(--hard);
+}
+.choice[aria-pressed="true"] { background: var(--tomato-deep); color: white; }
+.wizard-nav { display: flex; gap: 8px; margin-top: auto; padding-top: 8px; }
+.wizard-nav .btn, .wizard-nav .ghost { flex: 1; min-height: 56px; font-size: 1.15rem; }
+.confirm-block h3 { font-family: var(--sticker); margin: 8px 0; color: var(--gold); }
+.chip .x { font-size: 1.3rem; line-height: 1; }
+.pizza-svg .pop {
+  transform-origin: center bottom;
+  animation: gpg-chute 1.05s cubic-bezier(0.15, 0.75, 0.2, 1) both;
+}
+.pizza-svg .canopy { animation: gpg-canopy 1.05s ease both; }
+.skydive { position: fixed; z-index: 45; top: 8px; left: 12%; pointer-events: none; opacity: 0; }
+.skydive.run { animation: gpg-sky 1.45s ease-in forwards; }
+.oven-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #120806;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-bottom: 28px;
+}
+.oven-mouth {
+  width: min(94vw, 440px);
+  height: 64vh;
+  border-radius: 240px 240px 16px 16px;
+  background: radial-gradient(circle at 50% 78%, #4a2014, #120806 68%);
+  border: 12px solid #6a3a1c;
+  border-bottom-width: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 -60px 90px rgba(255, 80, 16, 0.55);
+}
+.flames {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 36%;
+  background:
+    radial-gradient(ellipse at 28% 100%, #ffe08a, transparent 46%),
+    radial-gradient(ellipse at 70% 100%, #ff4d12, transparent 52%),
+    linear-gradient(#ffb347, #ff3b1a);
+  animation: gpg-flame 0.28s infinite alternate;
+}
+.oven-pizza { position: absolute; width: 62%; left: -18%; bottom: 24%; animation: gpg-slide 1.6s cubic-bezier(0.4, 0.05, 0.2, 1) forwards; }
+.oven-scene .peel {
+  position: absolute;
+  height: 18px;
+  width: 70%;
+  left: -28%;
+  bottom: 22%;
+  background: linear-gradient(#f0c27a, #c48a3a);
+  border: 3px solid #140e0c;
+  border-radius: 10px;
+  animation: gpg-slide 1.6s cubic-bezier(0.4, 0.05, 0.2, 1) forwards;
+}
+.oven-caption { font-family: var(--sticker); color: var(--gold); letter-spacing: 0.06em; margin: 0; }
+.success { min-height: 78dvh; display: grid; align-content: center; gap: 14px; text-align: left; }
+.success h2 { font-family: var(--display); font-size: clamp(3.4rem, 16vw, 5.5rem); color: white; text-shadow: 4px 4px 0 var(--tomato-deep); margin: 0; }
+.success p { color: var(--cream-2); font-size: 1.15rem; }
+.btn.big { min-height: 68px; font-size: 1.15rem; width: 100%; }
+.after { display: grid; gap: 12px; }
+@keyframes gpg-chute {
+  0% { transform: translateY(-72px); }
+  72% { transform: translateY(8px); }
+  100% { transform: translateY(0); }
+}
+@keyframes gpg-canopy {
+  0%, 68% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes gpg-sky {
+  0% { opacity: 1; transform: translate3d(0, -8px, 0) rotate(-8deg); }
+  100% { opacity: 0; transform: translate3d(46vw, 72vh, 0) rotate(12deg); }
+}
+@keyframes gpg-slide { to { transform: translateX(92%); } }
+@keyframes gpg-flame { from { transform: scaleY(1); } to { transform: scaleY(1.08); } }
 @media (prefers-reduced-motion: reduce) {
   .pizza-svg .pop,
+  .pizza-svg .chute,
   .pizza-svg.is-spin,
   .peel,
-  .leaf { animation: none; }
-  .party { display: none; }
+  .leaf,
+  .skydive,
+  .oven-pizza,
+  .oven-scene .peel,
+  .flames { animation: none; }
+  .party, .skydive { display: none; }
 }
 
 @media (min-width: 880px) {

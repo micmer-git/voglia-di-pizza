@@ -1,5 +1,5 @@
 {
-  // GoPizzaGo — pizze dell'amicizia. Deploy: npm run deploy (vedi README).
+  // GoPizzaGo. Deploy: npm run deploy (vedi README).
   "name": "gopizzago",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-01",
