@@ -328,6 +328,35 @@ function showToast(message: string) {
   el.hidden = !message;
 }
 
+function spinPizza() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const el = document.querySelector('.stage .pizza-svg');
+  if (!(el instanceof Element)) return;
+  el.classList.remove('is-spin');
+  void el.getBoundingClientRect();
+  el.classList.add('is-spin');
+}
+
+function celebrate() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelector('.party')?.remove();
+  const layer = document.createElement('div');
+  layer.className = 'party';
+  layer.setAttribute('aria-hidden', 'true');
+  const peel = document.createElement('div');
+  peel.className = 'peel';
+  layer.appendChild(peel);
+  for (let i = 0; i < 18; i++) {
+    const leaf = document.createElement('span');
+    leaf.className = 'leaf';
+    leaf.style.left = `${6 + ((i * 47) % 88)}%`;
+    leaf.style.animationDelay = `${i * 35}ms`;
+    layer.appendChild(leaf);
+  }
+  document.body.appendChild(layer);
+  window.setTimeout(() => layer.remove(), 1400);
+}
+
 function toast(message: string) {
   state.toast = message;
   showToast(message);
@@ -375,19 +404,22 @@ function paint(opts?: { restoreFocus?: boolean }) {
   }
 }
 
+function banner(): string {
+  return state.banner ? `<p class="banner" role="status">${esc(state.banner)}</p>` : '';
+}
+
 function shell(): string {
   return `<div class="wrap">
     <header class="top">
-      <div class="brand">${svg(SHOWPIECE, 'brand', false, true)}<span><strong>GoPizzaGo</strong><em>la pizza dell’amicizia</em></span></div>
+      <div class="brand"><span class="logo-mark">GO</span><span><strong>PizzaGo</strong><em>pizza dell’amicizia</em></span></div>
       <nav class="nav">
         <a href="../">Sito</a>
         ${state.screen === 'admin' ? '<button class="ghost" type="button" data-action="leave-admin">Le pizze</button>' : '<button class="ghost" type="button" data-action="open-admin">Forno</button>'}
         ${state.token || state.name ? '<button class="ghost" type="button" data-action="logout">Esci</button>' : ''}
       </nav>
     </header>
-    ${state.banner ? `<p class="banner" role="status">${esc(state.banner)}</p>` : ''}
     <div id="view">${view()}</div>
-    <p class="foot">Fatto per la pizza dell’amicizia di Michele.</p>
+    <p class="foot">Forno di Michele · lancia i condimenti</p>
     <div id="toast" class="toast" role="status" ${state.toast ? '' : 'hidden'}></div>
   </div>`;
 }
@@ -400,20 +432,21 @@ function view(): string {
 }
 
 function loadingView(): string {
-  return `<section class="gate"><div class="stage">${svg(SHOWPIECE, 'load', false)}</div><p class="lede">Il forno si scalda…</p></section>`;
+  return `<section class="gate"><div class="stage">${svg(SHOWPIECE, 'load', false)}</div><p class="lede">Il forno ruggisce…</p></section>`;
 }
 
 function gateView(): string {
   return `<section class="gate">
-    <div class="stage">${svg(SHOWPIECE, 'gate', true)}</div>
+    <div class="stage">${svg(SHOWPIECE, 'gate', true)}<p class="caption">La pizza dell’amicizia è già in pista</p></div>
+    ${banner()}
     <div class="gate-card">
-      <h1>Ciao.</h1>
-      <p class="lede">Michele accende il forno. Dimmi come ti chiami e componi la tua pizza, anche in più varianti.</p>
+      <h1>Chi pizza?</h1>
+      <p class="lede">Michele ha acceso il forno. Butta il nome sul bancone e lancia i condimenti, anche in più varianti.</p>
       <form data-action="enter">
         <label class="field"><span>Il tuo nome</span>
           <input id="f-name" data-field="gate-name" name="nome" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Per esempio Giulia" value="${esc(state.name)}" required>
         </label>
-        <button class="btn" type="submit">Voglio la pizza</button>
+        <button class="btn" type="submit">Si parte</button>
       </form>
     </div>
   </section>`;
@@ -422,33 +455,62 @@ function gateView(): string {
 function builderView(): string {
   const draft = state.draft;
   const exists = saved(draft);
-  const saveText = state.busy ? 'Salvo…' : !state.online ? (exists ? 'Aggiorna su questo telefono' : 'Salva su questo telefono') : exists ? 'Aggiorna' : 'Salva per Michele';
+  const saveText = state.busy
+    ? 'Inforno…'
+    : !state.online
+      ? exists
+        ? 'Aggiorna sul telefono'
+        : 'Salva sul telefono'
+      : exists
+        ? 'Inforna di nuovo'
+        : 'Inforna per Michele';
   return `<section class="builder">
     <div class="stage-wrap">
       <div class="stage">${svg(draft, `live-${draft.id}`, true)}<p class="caption">${esc(describe(draft))}</p></div>
     </div>
     <div class="editor">
+      ${banner()}
       <div class="presets" role="list">${usablePresets().map((preset) => `<button type="button" class="preset" role="listitem" data-action="preset" data-id="${esc(preset.id)}" aria-pressed="${draft.preset === preset.id}">${esc(preset.name)}</button>`).join('')}</div>
-      <div class="cards">${state.pizzas.map((pizza) => `<button type="button" class="pizza-card ${pizza.id === draft.id ? 'is-current' : ''}" data-action="edit-pizza" data-id="${esc(pizza.id)}">${svg(pizza, `card-${pizza.id}`, false)}<strong>${esc(pizza.label || 'Pizza')}</strong><small>${esc(describe(pizza))}</small></button>`).join('')}${state.pizzas.length === 0 ? '<p class="hint">Ancora nessuna pizza salvata. Questa sarà la prima.</p>' : ''}</div>
+      <div class="cards">${state.pizzas.map((pizza) => `<button type="button" class="pizza-card ${pizza.id === draft.id ? 'is-current' : ''}" data-action="edit-pizza" data-id="${esc(pizza.id)}">${svg(pizza, `card-${pizza.id}`, false)}<strong>${esc(pizza.label || 'Pizza')}</strong><small>${esc(describe(pizza))}</small></button>`).join('')}${state.pizzas.length === 0 ? '<p class="hint">Il banco è vuoto. Questa è la prima.</p>' : ''}</div>
       <div class="panel">
-        <h2>${esc(state.name ? `Le pizze di ${state.name}` : 'La tua pizza')}</h2>
+        <h2>${esc(state.name ? `Banco di ${state.name}` : 'Il tuo banco')}</h2>
         <label class="field"><span>Il tuo nome</span><input id="f-guest-name" data-field="guest-name" maxlength="40" value="${esc(state.name)}"></label>
         <label class="field"><span>Nome della variante</span><input id="f-label" data-field="label" maxlength="40" placeholder="es. senza cipolla" value="${esc(draft.label)}"></label>
         <button type="button" class="split-toggle" data-action="toggle-split" aria-pressed="${draft.split}">Metà e metà</button>
-        ${draft.split ? `<div class="halves split">${halfEditor('left', 'Metà A')}${halfEditor('right', 'Metà B')}</div>` : `<div class="halves">${halfEditor('left', 'Base e condimenti')}</div>`}
-        <label class="field"><span>Note per Michele</span><textarea id="f-notes" data-field="notes" maxlength="280" placeholder="es. ben cotta, taglio a fette">${esc(draft.notes)}</textarea></label>
+        ${draft.split ? `<div class="halves split">${halfEditor('left', 'Metà A')}${halfEditor('right', 'Metà B')}</div>` : `<div class="halves">${halfEditor('left', 'Lancia i condimenti')}</div>`}
+        <label class="field"><span>Urla al forno</span><textarea id="f-notes" data-field="notes" maxlength="280" placeholder="es. ben cotta, taglio a fette">${esc(draft.notes)}</textarea></label>
         <div class="editor-actions">
           <button class="btn" type="button" data-action="save" ${state.busy ? 'disabled' : ''}>${saveText}</button>
-          <button class="ghost" type="button" data-action="new-pizza">Nuova</button>
-          ${exists ? '<button class="ghost" type="button" data-action="variant">Salva come variante</button>' : ''}
+          <button class="ghost" type="button" data-action="new-pizza">Un’altra</button>
+          ${exists ? '<button class="ghost" type="button" data-action="variant">Fanne una variante</button>' : ''}
           ${exists ? `<button class="ghost" type="button" data-action="delete-pizza" data-id="${esc(draft.id)}">${state.pending === `pizza:${draft.id}` ? 'Confermi?' : 'Elimina'}</button>` : ''}
         </div>
         <div class="link-row">
-          ${state.token ? `<button class="ghost" type="button" data-action="copy-link">Copia il link per modificarla dopo</button><p class="hint">Il link è solo tuo. Chi lo ha può modificare le tue pizze, senza password.</p>` : '<p class="hint">Sul telefono la pizza resta salvata. Il forno comune si accende quando il Worker è collegato.</p>'}
+          ${state.token ? `<button class="ghost" type="button" data-action="copy-link">Copia il link segreto</button><p class="hint">Il link è la tua chiave, senza password. Chi lo ha può modificare le tue pizze.</p>` : '<p class="hint">Resta sul telefono finché il forno comune non si accende.</p>'}
         </div>
       </div>
     </div>
   </section>`;
+}
+
+function chipIcon(shape: string, color: string): string {
+  const fill = /^#[0-9a-fA-F]{6}$/.test(color) ? color : '#ff2a2a';
+  const paths: Record<string, string> = {
+    olive: `<ellipse cx="16" cy="16" rx="8" ry="6" fill="${fill}"/><ellipse cx="16" cy="16" rx="2.4" ry="1.8" fill="#e07a62"/>`,
+    ribbon: `<path d="M6 20c4-8 8-8 12-2 3 4 6 2 8-1" fill="none" stroke="${fill}" stroke-width="4" stroke-linecap="round"/>`,
+    mushroom: `<ellipse cx="16" cy="20" rx="3" ry="6" fill="#f3e2cc"/><ellipse cx="16" cy="13" rx="10" ry="7" fill="${fill}"/>`,
+    artichoke: `<ellipse cx="16" cy="16" rx="5" ry="11" fill="${fill}"/><ellipse cx="16" cy="16" rx="5" ry="11" fill="${fill}" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="5" ry="11" fill="${fill}" transform="rotate(120 16 16)"/>`,
+    cherry: `<circle cx="16" cy="18" r="7" fill="${fill}"/><path d="M16 12c2-4 6-5 8-3" fill="none" stroke="#0c6b2e" stroke-width="2"/>`,
+    'blue-cheese': `<path d="M8 20c2-8 14-8 16 0" fill="${fill}"/><circle cx="13" cy="16" r="1.4" fill="#6d8eab"/><circle cx="18" cy="18" r="1.2" fill="#6d8eab"/>`,
+    coin: `<circle cx="16" cy="16" r="9" fill="#9d2b28"/><circle cx="16" cy="16" r="6" fill="${fill}"/>`,
+    shaving: `<ellipse cx="16" cy="16" rx="10" ry="3.5" fill="${fill}" transform="rotate(-20 16 16)"/>`,
+    onion: `<path d="M8 18a8 7 0 0 1 16 0" fill="none" stroke="${fill}" stroke-width="3"/><path d="M11 18a5 4 0 0 1 10 0" fill="none" stroke="#f7e4f1" stroke-width="2"/>`,
+    leaf: `<path d="M16 26c8-6 8-16 0-20-8 4-8 14 0 20z" fill="${fill}"/>`,
+    chunk: `<circle cx="16" cy="16" r="8" fill="${fill}"/>`,
+    blob: `<circle cx="16" cy="16" r="8" fill="${fill}" stroke="#140e0c" stroke-width="1"/>`,
+    dot: `<circle cx="16" cy="16" r="4" fill="${fill}"/>`,
+  };
+  return `<svg class="chip-ico" viewBox="0 0 32 32" aria-hidden="true">${paths[shape] || paths.dot}</svg>`;
 }
 
 function halfEditor(side: 'left' | 'right', title: string): string {
@@ -459,18 +521,18 @@ function halfEditor(side: 'left' | 'right', title: string): string {
       ${(['rossa', 'bianca', 'altro'] as const).map((base) => `<button type="button" class="base-btn" data-action="set-base" data-half="${side}" data-base="${base}" aria-pressed="${half.base === base}">${base === 'rossa' ? 'Rossa' : base === 'bianca' ? 'Bianca' : 'Altro'}</button>`).join('')}
     </div>
     ${half.base === 'altro' ? `<label class="field"><span>Quale base?</span><input id="${noteId}" data-field="base-note-${side}" maxlength="40" placeholder="es. pesto" value="${esc(half.baseNote)}"></label>` : ''}
-    <div class="chips">${activeToppings().map((ing) => `<button type="button" class="chip" data-action="toggle-topping" data-half="${side}" data-id="${esc(ing.id)}" aria-pressed="${half.toppingIds.includes(ing.id)}">${esc(ing.name)}</button>`).join('')}</div>
+    <div class="chips">${activeToppings().map((ing) => `<button type="button" class="chip" data-action="toggle-topping" data-half="${side}" data-id="${esc(ing.id)}" aria-pressed="${half.toppingIds.includes(ing.id)}">${chipIcon(ing.shape, ing.color)}<span>${esc(ing.name)}</span></button>`).join('')}</div>
   </fieldset>`;
 }
 
 function adminView(): string {
   if (!state.online) {
-    return `<section class="admin-lock"><div class="panel"><h2>Il forno</h2><p class="hint">${esc(state.adminError || MSG_CONFIG)}</p><button class="btn" type="button" data-action="leave-admin">Torna alle pizze</button></div></section>`;
+    return `<section class="admin-lock">${banner()}<div class="panel"><h2>Forno spento</h2><p class="hint">${esc(state.adminError || MSG_CONFIG)}</p><button class="btn" type="button" data-action="leave-admin">Torna alle pizze</button></div></section>`;
   }
   if (!state.overview) {
-    return `<section class="admin-lock"><form class="panel" data-action="admin-login">
+    return `<section class="admin-lock">${banner()}<form class="panel" data-action="admin-login">
       <h2>Il forno di Michele</h2>
-      <p class="hint">Qui ci sono tutte le pizze e la lista della spesa. Serve il PIN.</p>
+      <p class="hint">Qui esplodono tutte le pizze e lo scontrino della spesa. Serve il PIN.</p>
       <label class="field"><span>PIN</span><input id="f-pin" data-field="pin" type="password" autocomplete="off" value="${esc(state.adminPin)}"></label>
       ${state.adminError ? `<p class="banner">${esc(state.adminError)}</p>` : ''}
       <button class="btn" type="submit">Entra nel forno</button>
@@ -478,11 +540,19 @@ function adminView(): string {
   }
   const shop = state.overview.shopping;
   return `<section class="admin">
+    ${banner()}
     <div class="panel">
-      <h2>Lista della spesa</h2>
-      <p class="hint">${shop.guestCount === 1 ? '1 persona' : `${shop.guestCount} persone`} · ${shop.pizzaCount === 1 ? '1 pizza' : `${shop.pizzaCount} pizze`}</p>
-      ${shop.lines.length ? `<ul class="shop">${shop.lines.map((line) => `<li><strong>${esc(line.name)}</strong><span>${esc(lineMeta(line))}</span></li>`).join('')}</ul>` : '<p class="hint">Nessuno ha ancora scelto. Il forno è caldo, gli amici arrivano.</p>'}
-      ${shop.notes.length ? `<h3>Note</h3><ul class="shop">${shop.notes.map((note) => `<li><strong>${esc(note.guest)}</strong><span>${esc(`${note.pizza}: ${note.notes}`)}</span></li>`).join('')}</ul>` : ''}
+      <div class="receipt-top"><h2>Scontrino</h2><span class="stamp">SPESA</span></div>
+      <div class="mega">
+        <div><strong>${shop.pizzaCount}</strong><span>${shop.pizzaCount === 1 ? 'pizza' : 'pizze'}</span></div>
+        <div><strong>${shop.guestCount}</strong><span>${shop.guestCount === 1 ? 'amico' : 'amici'}</span></div>
+      </div>
+      <div class="receipt">
+        <p class="receipt-end">FORNO DI MICHELE</p>
+        ${shop.lines.length ? `<ul class="shop">${shop.lines.map((line) => `<li><strong>${esc(line.name)}</strong><span>${esc(lineMeta(line))}</span></li>`).join('')}</ul>` : '<p class="hint">Nessuno ha ordinato. Il forno fischia da solo.</p>'}
+        ${shop.notes.length ? `<ul class="shop">${shop.notes.map((note) => `<li><strong>${esc(note.guest)}</strong><span>${esc(`${note.pizza}: ${note.notes}`)}</span></li>`).join('')}</ul>` : ''}
+        <p class="receipt-end">grazie · il forno è caldo</p>
+      </div>
       <div class="row-actions">
         <button class="btn" type="button" data-action="copy-shop">Copia lista</button>
         <button class="ghost" type="button" data-action="download-shop">Scarica .txt</button>
@@ -603,12 +673,14 @@ async function saveDraft(asVariant: boolean) {
     state.draft = structuredClone(pizza);
     state.dirty = false;
     writeLocal();
-    toast('Salvata su questo telefono');
+    toast('Infornata sul telefono');
     paint();
+    celebrate();
     return;
   }
   state.busy = true;
   paint();
+  let cheered = false;
   try {
     if (!state.token) {
       const created = (await api('/api/guests', { method: 'POST', body: { name: state.name || 'Ospite' } })) as { editToken: string };
@@ -627,12 +699,14 @@ async function saveDraft(asVariant: boolean) {
     else state.pizzas.push(savedPizza);
     state.draft = structuredClone(savedPizza);
     state.dirty = false;
-    toast(asVariant ? 'Variante salvata' : 'Salvata per Michele');
+    cheered = true;
+    toast(asVariant ? 'Variante infornata' : 'Infornata per Michele');
   } catch (err) {
     toast(err instanceof Error ? err.message : 'Non sono riuscito a salvare');
   } finally {
     state.busy = false;
     paint();
+    if (cheered) celebrate();
   }
 }
 
@@ -691,6 +765,7 @@ function applyPreset(id: string) {
   state.freshIds = [...preset.toppings];
   state.dirty = true;
   paint();
+  spinPizza();
 }
 
 function toggleTopping(side: 'left' | 'right', id: string) {
@@ -782,6 +857,7 @@ async function onClick(ev: Event) {
     state.dirty = true;
     state.draft.preset = null;
     paint();
+    spinPizza();
     return;
   }
   if (action === 'set-base') {
@@ -793,6 +869,7 @@ async function onClick(ev: Event) {
     state.dirty = true;
     state.draft.preset = null;
     paint();
+    spinPizza();
     return;
   }
   if (action === 'toggle-topping') {
@@ -931,7 +1008,7 @@ function onInput(ev: Event) {
   else if (field === 'ing-active' && el instanceof HTMLInputElement) state.ingForm.active = el.checked;
   if (field === 'guest-name') {
     const title = document.querySelector('.editor h2');
-    if (title) title.textContent = value.trim() ? `Le pizze di ${value.trim()}` : 'La tua pizza';
+    if (title) title.textContent = value.trim() ? `Banco di ${value.trim()}` : 'Il tuo banco';
   }
   if (field.startsWith('base-note')) paint({ restoreFocus: true });
 }
