@@ -155,37 +155,38 @@ function minDist(shape: string): number {
 function shapeMarkup(shape: string, color: string, rng: Rng): string {
   const fill = safeColor(color);
   if (shape === 'olive') {
-    return `<ellipse rx="6.4" ry="5" fill="${fill}"/><ellipse rx="2" ry="1.5" fill="#e07a62"/><ellipse cx="-1.8" cy="-1.4" rx="1.6" ry="0.8" fill="#fff" opacity="0.2"/>`;
+    return `<ellipse rx="7" ry="5.2" fill="#1a1412"/><ellipse rx="6.2" ry="4.6" fill="${fill}"/><ellipse rx="5.2" ry="3.6" fill="#3a312c"/><ellipse cx="-1.6" cy="-1.3" rx="2.2" ry="1.1" fill="#fff" opacity="0.28"/><ellipse rx="2.1" ry="1.55" fill="#c4483c"/><ellipse cx="-0.5" cy="-0.4" rx="0.7" ry="0.4" fill="#f3c2b4" opacity="0.8"/>`;
   }
   if (shape === 'ribbon') {
-    const bend = (rng() - 0.5) * 4;
-    return `<path d="M-13,${n(2 + bend)} C-6,-6 1,-3 8,${n(1 + bend)} C13,4 15,-1 16,-3" fill="none" stroke="${fill}" stroke-width="4.6" stroke-linecap="round"/><path d="M-9,4 C-2,-1 5,0 12,4" fill="none" stroke="#f6d2c6" stroke-width="1.7" stroke-linecap="round" opacity="0.85"/>`;
+    const bend = (rng() - 0.5) * 3;
+    return `<path d="M-14,${n(3 + bend)} C-8,-7 -1,-5 6,${n(bend)} C11,4 14,1 16,-2 C12,3 8,2 4,${n(1 + bend)} C-2,-2 -8,-1 -14,${n(4 + bend)} Z" fill="${fill}"/><path d="M-12,${n(2 + bend)} C-6,-4 2,-2 8,1" fill="none" stroke="#f7d2c8" stroke-width="1.4" stroke-linecap="round" opacity="0.85"/><path d="M-10,${n(4 + bend)} C-4,-1 3,0 9,3" fill="none" stroke="#a85a68" stroke-width="0.7" opacity="0.45"/>`;
   }
   if (shape === 'mushroom') {
-    return `<ellipse cx="0" cy="3.2" rx="2.1" ry="5" fill="#f3e2cc"/><ellipse cx="0" cy="-1.2" rx="8.2" ry="5.4" fill="${fill}"/><ellipse cx="-2.8" cy="-2" rx="1.1" ry="0.7" fill="#6a432c" opacity="0.55"/><ellipse cx="2.4" cy="-0.4" rx="0.9" ry="0.6" fill="#6a432c" opacity="0.4"/><ellipse cx="0.2" cy="-3" rx="1.8" ry="0.7" fill="#fff" opacity="0.18"/>`;
+    return `<ellipse cx="0" cy="4" rx="2.4" ry="5.2" fill="#f4e4cf"/><ellipse cx="0.4" cy="4" rx="1" ry="4" fill="#e4c9a4" opacity="0.7"/><path d="M-9,-1 C-8,-7 8,-8 9,-1 C8,3 -8,3 -9,-1 Z" fill="${fill}"/><path d="M-7,-2 C-4,-6 5,-6 7,-1" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.35" stroke-linecap="round"/><ellipse cx="-3" cy="-2" rx="1.3" ry="0.8" fill="#6a432c"/><ellipse cx="2.6" cy="-0.6" rx="1" ry="0.65" fill="#5c3a28" opacity="0.8"/><ellipse cx="0" cy="-3.2" rx="1.5" ry="0.7" fill="#6a432c" opacity="0.55"/>`;
   }
   if (shape === 'artichoke') {
-    const leaves = [0, 40, 80, 120, 160, 200].map((deg) => `<ellipse rx="3.2" ry="7" fill="${fill}" transform="rotate(${deg})"/>`).join('');
-    return `${leaves}<ellipse rx="2.2" ry="3" fill="#d7e2a8"/>`;
+    const leaf = (rot: number, shade: string) => `<ellipse rx="3.1" ry="7.4" fill="${shade}" transform="rotate(${rot})" stroke="#245c30" stroke-width="0.25"/>`;
+    return `${leaf(0, fill)}${leaf(55, '#7ea84e')}${leaf(110, fill)}${leaf(170, '#5f8a38')}${leaf(230, fill)}${leaf(290, '#8fb85a')}<ellipse rx="2.4" ry="3.2" fill="#e4efb8"/><ellipse cx="-0.6" cy="-0.8" rx="1" ry="1.4" fill="#fff" opacity="0.35"/>`;
   }
   if (shape === 'cherry') {
-    return `<circle r="5.2" fill="${fill}"/><circle cx="-1.6" cy="-1.7" r="1.5" fill="#fff" opacity="0.38"/><ellipse cx="0.2" cy="-5.3" rx="1.1" ry="1.7" fill="#2f6b38"/><path d="M0.2,-5 C2,-8 4,-8 5,-6" fill="none" stroke="#2f6b38" stroke-width="0.7"/>`;
+    return `<circle r="5.6" fill="#9d1c18"/><circle r="5.1" fill="${fill}"/><circle cx="-1.7" cy="-1.8" r="1.7" fill="#fff" opacity="0.42"/><ellipse cx="1.2" cy="1.4" rx="1.6" ry="1" fill="#8d1a16" opacity="0.35"/><ellipse cx="0.2" cy="-5.4" rx="1.2" ry="1.8" fill="#2f6b38"/><path d="M0.4,-5.2 C2.2,-9 5.5,-9 6.4,-6.2" fill="none" stroke="#246b32" stroke-width="0.8" stroke-linecap="round"/>`;
   }
   if (shape === 'blue-cheese') {
-    const body = blobPath(rng, 8);
-    return `<path d="${body}" fill="${fill}"/><circle cx="-2" cy="-1" r="1.1" fill="#7f9bb5" opacity="0.8"/><circle cx="2.2" cy="1.4" r="0.9" fill="#6d8eab"/><circle cx="0.4" cy="2.2" r="0.6" fill="#8eacc4"/><circle cx="1" cy="-2" r="0.55" fill="#6d8eab"/>`;
+    const body = blobPath(rng, 8.2);
+    return `<path d="${body}" fill="#f4efe2"/><path d="${body}" fill="${fill}" opacity="0.88"/><path d="M-3,-2 C-1,0 1,2 3,1" fill="none" stroke="#6d8eab" stroke-width="1.3" stroke-linecap="round"/><path d="M-1,2 C1,3 2,1 4,2" fill="none" stroke="#8fb0c8" stroke-width="0.8"/><circle cx="-2.2" cy="-0.4" r="1.05" fill="#5f86a8"/><circle cx="2.4" cy="1.5" r="0.85" fill="#6d8eab"/><circle cx="0.2" cy="2.1" r="0.55" fill="#9ec0d4"/><ellipse cx="-1" cy="-2" rx="1.6" ry="0.7" fill="#fff" opacity="0.35"/>`;
   }
   if (shape === 'coin') {
-    return `<circle r="7" fill="#9d2b28"/><circle r="5.7" fill="${fill}"/><circle cx="-2" cy="-1" r="0.7" fill="#f3d2a8"/><circle cx="1.6" cy="1.3" r="0.55" fill="#f6dcc0"/><circle cx="0.5" cy="-2.1" r="0.45" fill="#f3d2a8"/><circle cx="-1.2" cy="1.8" r="0.4" fill="#f8e2cc" opacity="0.8"/>`;
+    return `<circle r="7.4" fill="#7d1e1c"/><circle r="6.5" fill="${fill}"/><circle r="5.2" fill="#e25548"/><circle cx="-2.1" cy="-1.2" r="0.85" fill="#f6d7b0"/><circle cx="1.7" cy="1.4" r="0.7" fill="#f3d2a8"/><circle cx="0.6" cy="-2.2" r="0.5" fill="#fff1dc"/><circle cx="-1.4" cy="1.8" r="0.45" fill="#f8e2cc" opacity="0.9"/><ellipse cx="-1.8" cy="-2" rx="2" ry="1" fill="#fff" opacity="0.22"/>`;
   }
   if (shape === 'shaving') {
-    return `<ellipse rx="7" ry="1.7" fill="${fill}" transform="rotate(${n((rng() - 0.5) * 30)})"/><ellipse rx="4.5" ry="1" fill="#fff6d2" opacity="0.65" transform="rotate(${n((rng() - 0.5) * 20)})"/>`;
+    const rot = (rng() - 0.5) * 40;
+    return `<ellipse rx="8" ry="2.1" fill="#e6c56a" transform="rotate(${n(rot)})"/><ellipse rx="6.4" ry="1.15" fill="${fill}" transform="rotate(${n(rot)})"/><ellipse rx="3.2" ry="0.45" fill="#fff6d0" opacity="0.8" transform="rotate(${n(rot)}) translate(0 -0.4)"/>`;
   }
   if (shape === 'onion') {
-    return `<path d="M-8,1 a8,7 0 0 1 16,0" fill="none" stroke="${fill}" stroke-width="2.3"/><path d="M-5,1.4 a5,4.2 0 0 1 10,0" fill="none" stroke="#f7e4f1" stroke-width="1.3"/><path d="M-2.2,1.6 a2.2,1.8 0 0 1 4.4,0" fill="none" stroke="${fill}" stroke-width="1"/>`;
+    return `<path d="M-9,2 a9,7.2 0 0 1 18,0" fill="#f6e4f2"/><path d="M-9,2 a9,7.2 0 0 1 18,0" fill="none" stroke="${fill}" stroke-width="2.4"/><path d="M-6,2.2 a6,4.6 0 0 1 12,0" fill="none" stroke="#c45c9a" stroke-width="1.5"/><path d="M-3.2,2.3 a3.2,2.3 0 0 1 6.4,0" fill="none" stroke="#f7e6f4" stroke-width="1.2"/><ellipse cx="-2" cy="-1" rx="2" ry="0.7" fill="#fff" opacity="0.35"/>`;
   }
   if (shape === 'chunk') {
-    return `<path d="${blobPath(rng, 6.5)}" fill="${fill}"/><ellipse cx="-1.5" cy="-1.2" rx="1.4" ry="0.8" fill="#fff" opacity="0.25"/>`;
+    return `<path d="${blobPath(rng, 6.6)}" fill="#b42318"/><path d="${blobPath(rng, 6.2)}" fill="${fill}"/><ellipse cx="-1.6" cy="-1.4" rx="1.6" ry="0.9" fill="#fff" opacity="0.28"/>`;
   }
   if (shape === 'leaf') {
     return `<path d="M0,8 C6,2 5,-6 0,-8 C-5,-6 -6,2 0,8 Z" fill="${fill}"/><path d="M0,6 V-6" stroke="#245c30" stroke-width="0.6" fill="none"/>`;
@@ -204,7 +205,7 @@ function sauceStops(base: HalfView['base'], note: string): [string, string] {
 
 function popWrap(inner: string, animate: boolean, delay: number): string {
   if (!animate) return `<g>${inner}</g>`;
-  return `<g class="pop" style="animation-delay:${delay}ms">${inner}</g>`;
+  return `<g class="pop" style="animation-delay:${delay}ms"><g class="canopy"><path d="M-11,-20 C-6,-34 6,-34 11,-20 C6,-26 -6,-26 -11,-20 Z" fill="#ffc83d" stroke="#140e0c" stroke-width="0.45"/><path d="M-8,-20 L-1,-1 M8,-20 L1,-1 M0,-24 L0,-2" stroke="#fff6e4" stroke-width="0.35" fill="none"/></g><g class="payload">${inner}</g></g>`;
 }
 
 function placed(
@@ -296,7 +297,7 @@ function cheeseLayer(pizzaId: string, side: Side, animate: boolean): string {
       const gloss = blobPath(rng, 5);
       const x = 100 + spot.x;
       const y = 100 + spot.y;
-      const inner = `<path d="${body}" fill="#f0ddc0"/><path d="${body}" fill="#fffaf3" transform="translate(-0.8 -1)"/><ellipse cx="-2" cy="-2" rx="4" ry="2" fill="#fff" opacity="0.45"/><path d="${gloss}" fill="#fff" opacity="0.28" transform="translate(-2 -2)"/>`;
+      const inner = `<path d="${body}" fill="#e7c48a"/><path d="${body}" fill="#fff6e4" transform="translate(-1.1 -1.3)"/><path d="${gloss}" fill="#fff" opacity="0.55" transform="translate(-3 -3)"/><circle cx="3" cy="2" r="1.1" fill="#f3d7a4" opacity="0.8"/><circle cx="-2" cy="3" r="0.7" fill="#f6e2b8" opacity="0.9"/>`;
       return `<g data-part="cheese" data-half="${side}" transform="translate(${n(x)} ${n(y)}) rotate(${n(spot.rot)}) scale(${n(0.9 + spot.s * 0.25)})">${popWrap(inner, animate, index * 35)}</g>`;
     })
     .join('');
@@ -304,19 +305,20 @@ function cheeseLayer(pizzaId: string, side: Side, animate: boolean): string {
 
 function charAndFlour(rng: Rng): string {
   let marks = '';
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 22; i++) {
     const a = rng() * Math.PI * 2;
-    const rad = 69 + rng() * 7;
+    const rad = 68 + rng() * 9;
     const x = 100 + Math.cos(a) * rad;
     const y = 100 + Math.sin(a) * rad;
-    marks += `<ellipse cx="${n(x)}" cy="${n(y)}" rx="${n(1.4 + rng() * 2.4)}" ry="${n(0.8 + rng())}" fill="#4a2a1c" opacity="${n(0.28 + rng() * 0.35)}" transform="rotate(${n(rng() * 180)} ${n(x)} ${n(y)})"/>`;
+    const dark = rng() > 0.45;
+    marks += `<ellipse cx="${n(x)}" cy="${n(y)}" rx="${n(1.1 + rng() * 2.8)}" ry="${n(0.7 + rng() * 1.3)}" fill="${dark ? '#2a140e' : '#6a3a22'}" opacity="${n(0.35 + rng() * 0.5)}" transform="rotate(${n(rng() * 180)} ${n(x)} ${n(y)})"/>`;
   }
-  for (let i = 0; i < 18; i++) {
+  for (let i = 0; i < 16; i++) {
     const a = rng() * Math.PI * 2;
-    const rad = 73 + rng() * 5;
+    const rad = 74 + rng() * 4;
     const x = 100 + Math.cos(a) * rad;
     const y = 100 + Math.sin(a) * rad;
-    marks += `<circle cx="${n(x)}" cy="${n(y)}" r="${n(0.4 + rng() * 0.7)}" fill="#fff6e4" opacity="${n(0.25 + rng() * 0.4)}"/>`;
+    marks += `<circle cx="${n(x)}" cy="${n(y)}" r="${n(0.35 + rng() * 0.7)}" fill="#fff6e4" opacity="${n(0.25 + rng() * 0.45)}"/>`;
   }
   return marks;
 }
@@ -363,10 +365,11 @@ export function renderPizzaSvg(pizza: PizzaView, opts: RenderOpts = {}): string 
   const cut = pizza.split ? divider(mulberry32(hash(`${pizzaId}:cut`))) : '';
   return `<svg class="pizza-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" ${a11y}>
     <defs>
-      <radialGradient id="${uid}-crust" cx="42%" cy="38%" r="68%">
-        <stop offset="0%" stop-color="#f2c98a"/>
-        <stop offset="58%" stop-color="#e09a48"/>
-        <stop offset="100%" stop-color="#c47a32"/>
+      <radialGradient id="${uid}-crust" cx="40%" cy="36%" r="72%">
+        <stop offset="0%" stop-color="#f6d7a2"/>
+        <stop offset="46%" stop-color="#e09a48"/>
+        <stop offset="78%" stop-color="#c56a28"/>
+        <stop offset="100%" stop-color="#8a3e16"/>
       </radialGradient>
       <clipPath id="${uid}-pie"><circle cx="100" cy="100" r="66"/></clipPath>
       ${clips}

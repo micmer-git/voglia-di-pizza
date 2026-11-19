@@ -1,6 +1,6 @@
 # GoPizzaGo — Worker
 
-Backend della pizza dell'amicizia (Cloudflare Worker + D1). In locale non serve un account: i test usano Miniflare.
+Backend di GoPizzaGo (Cloudflare Worker + D1). In locale non serve un account: i test usano Miniflare.
 
 ```bash
 npm test
