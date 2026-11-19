@@ -9,7 +9,7 @@
     {
       "binding": "DB",
       "database_name": "gopizzago",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "9f8147b0-fe69-4bd7-97e9-688a4595ce4f",
       "migrations_dir": "migrations"
     }
   ],
