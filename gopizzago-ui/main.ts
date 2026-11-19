@@ -406,6 +406,7 @@ function captureFocus() {
 }
 
 function paint(opts?: { restoreFocus?: boolean }) {
+  if (state.screen !== 'loading') syncLabel();
   const root = document.getElementById('app');
   if (!root) return;
   const savedFocus = opts?.restoreFocus ? captureFocus() : null;
@@ -444,8 +445,6 @@ function shell(): string {
     <header class="top">
       <div class="brand"><strong>GoPizzaGo</strong></div>
       <nav class="nav">
-        <a href="../">Sito</a>
-        <a href="#tutti">Tutti</a>
         ${state.token || state.name ? '<button class="ghost" type="button" data-action="logout">Esci</button>' : ''}
       </nav>
     </header>
@@ -507,7 +506,7 @@ function wizardView(): string {
   return `<section class="wizard">
     <div class="bars" aria-hidden="true">${bars}</div>
     <p class="step-label">Passo ${step + 1} di ${WIZARD.length} · ${WIZARD[step]}</p>
-    <div class="stage wizard-stage">${svg(state.draft, `live-${state.draft.id}`, true)}<p class="caption">${esc(describe(state.draft))}</p></div>
+    <div class="stage wizard-stage">${svg(state.draft, `live-${state.draft.id}`, true)}<p class="caption">${esc(state.draft.label || describe(state.draft))}</p></div>
     <div class="ask">${wizardAsk()}</div>
     <div class="wizard-nav">
       ${step > 0 ? '<button type="button" class="ghost" data-action="wizard-back">Indietro</button>' : ''}
@@ -545,7 +544,7 @@ function wizardAsk(): string {
     return `<h2>Confermi?</h2><p>Tocca un condimento per toglierlo.</p>${blocks}
       <button type="button" class="ghost" data-action="undo" ${state.undo.length ? '' : 'disabled'}>Annulla l’ultimo</button>`;
   }
-  return `<h2>Si inforna</h2><p>${esc(describe(draft))}</p>
+  return `<h2>${esc(draft.label || 'Si inforna')}</h2><p>${esc(describe(draft))}</p>
     <label class="field"><span>Note per Gozzandogo</span><textarea id="f-notes" data-field="notes" maxlength="280" placeholder="ben cotta, poco sale…">${esc(draft.notes)}</textarea></label>`;
 }
 
@@ -579,29 +578,54 @@ function listView(): string {
   </section>`;
 }
 
+function motionOff(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function playFilm(name: string, onDone: () => void) {
+  if (motionOff()) {
+    onDone();
+    return;
+  }
+  const layer = document.createElement('div');
+  layer.className = 'cinema';
+  layer.innerHTML = `<video autoplay muted playsinline poster="${name}.jpg"><source src="${name}.webm" type="video/webm"><source src="${name}.mp4" type="video/mp4"></video>`;
+  document.body.appendChild(layer);
+  const video = layer.querySelector('video');
+  let closed = false;
+  const finish = () => {
+    if (closed) return;
+    closed = true;
+    layer.remove();
+    onDone();
+  };
+  if (!video) {
+    finish();
+    return;
+  }
+  video.addEventListener('ended', finish);
+  video.addEventListener('error', finish);
+  window.setTimeout(finish, 5000);
+  video.play().catch(finish);
+}
+
 function launchSkydiver() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const el = document.getElementById('skydive');
-  if (!el) return;
-  el.innerHTML = `<svg viewBox="0 0 80 110" width="72" height="100"><path d="M10 28 C20 4 60 4 70 28 C55 18 25 18 10 28 Z" fill="#ffc83d" stroke="#140e0c" stroke-width="2"/><path d="M18 28 L38 70 M62 28 L42 70" stroke="#fff3df" stroke-width="1.4"/><circle cx="40" cy="78" r="8" fill="#ff2a2a" stroke="#140e0c" stroke-width="2"/><path d="M32 86 l8 16 8-16" fill="#fff3df" stroke="#140e0c" stroke-width="1.5"/></svg>`;
-  el.classList.remove('run');
-  void el.offsetWidth;
-  el.classList.add('run');
+  playFilm('parachute', () => undefined);
 }
 
 function startOven() {
   lsSet(DONE_KEY, '1');
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (motionOff()) {
     state.phase = 'done';
     paint();
     return;
   }
   state.phase = 'oven';
   paint();
-  window.setTimeout(() => {
+  playFilm('oven', () => {
     state.phase = 'done';
     paint();
-  }, 1700);
+  });
 }
 
 function loadingView(): string {
@@ -671,7 +695,6 @@ function builderView(): string {
         </div>
       </div>
     </div>
-    ${ordersSection()}
   </section>`;
 }
 
@@ -684,6 +707,7 @@ function ordersSection(): string {
   };
   return `<section class="orders" id="tutti">
     <h2>Tutte le pizze</h2>
+    <div class="orders-scroll">
     ${state.ordersNote ? `<p class="banner">${esc(state.ordersNote)}</p>` : ''}
     ${shop ? `<div class="panel">
       <div class="receipt-top"><h2>Scontrino</h2><span class="stamp">SPESA</span></div>
@@ -705,9 +729,10 @@ function ordersSection(): string {
     <div class="panel">
       ${guests.length === 0 ? '<p class="hint">Il tavolo è ancora vuoto.</p>' : guests.map((guest) => `<article class="guest">
         <div class="guest-head"><strong>${esc(guest.name)}</strong></div>
-        ${guest.pizzas.length === 0 ? '<p class="hint">Nessuna pizza.</p>' : guest.pizzas.map((pizza) => `<div class="mini-pizza">${svg(normalizePizza(pizza), `ord-${pizza.id}`, false)}<div><strong>${esc(pizza.label || 'Pizza')}</strong><p class="hint">${esc(describe(normalizePizza(pizza)))}</p>${pizza.notes ? `<p class="hint">${esc(pizza.notes)}</p>` : ''}</div></div>`).join('')}
+        ${guest.pizzas.length === 0 ? '<p class="hint">Nessuna pizza.</p>' : guest.pizzas.map((pizza) => `<div class="mini-pizza">${svg(normalizePizza(pizza), `ord-${pizza.id}`, false)}<div><strong>${esc(autoLabel(normalizePizza(pizza), guest.name))}</strong><p class="hint">${esc(describe(normalizePizza(pizza)))}</p>${pizza.notes ? `<p class="hint">${esc(pizza.notes)}</p>` : ''}</div></div>`).join('')}
       </article>`).join('')}
     </div>` : ''}
+    </div>
   </section>`;
 }
 
@@ -978,15 +1003,49 @@ async function loadOverview(repaint = true) {
   if (repaint) paint();
 }
 
+function sameSet(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const have = new Set(a);
+  return b.every((id) => have.has(id));
+}
+
+function matchingPreset(pizza: Pizza): Preset | null {
+  if (pizza.split) return null;
+  if (pizza.left.base === 'altro') return null;
+  return (
+    PRESETS.find(
+      (preset) =>
+        preset.base === pizza.left.base &&
+        !preset.baseNote &&
+        sameSet(preset.toppings, pizza.left.toppingIds),
+    ) ?? null
+  );
+}
+
+function autoLabel(pizza: Pizza, guestName: string): string {
+  const preset = matchingPreset(pizza);
+  if (preset) return preset.name;
+  const who = guestName.trim() || 'te';
+  return `La pizza di ${who}`;
+}
+
+function syncLabel() {
+  const preset = matchingPreset(state.draft);
+  state.draft.preset = preset ? preset.id : null;
+  state.draft.label = autoLabel(state.draft, state.name);
+}
+
 function applyPreset(id: string) {
   const preset = PRESETS.find((item) => item.id === id);
   if (!preset) return;
   const side = state.draft.split ? state.focusHalf : 'left';
   state.draft[side].toppingIds = [...preset.toppings];
-  state.draft.preset = preset.id;
-  if (!state.draft.label) state.draft.label = preset.name;
+  if (!state.draft.split && (preset.base === 'rossa' || preset.base === 'bianca')) {
+    state.draft.left.base = preset.base;
+  }
   state.freshIds = [...preset.toppings];
   state.dirty = true;
+  syncLabel();
   paint();
 }
 
@@ -997,8 +1056,8 @@ function toggleTopping(side: 'left' | 'right', id: string) {
     half.toppingIds = [...half.toppingIds, id];
     state.freshIds = [id];
   }
-  state.draft.preset = null;
   state.dirty = true;
+  syncLabel();
   paint();
 }
 
@@ -1488,9 +1547,26 @@ async function init() {
     } else state.screen = 'builder';
   } else state.screen = 'builder';
   state.story = false;
+  await repairOwnLabels();
   await loadOverview(false);
   if ((state.token || state.name) && lsGet(DONE_KEY) === '1') state.phase = 'list';
   paint();
+}
+
+async function repairOwnLabels() {
+  if (!state.online || !state.token) return;
+  for (const pizza of state.pizzas) {
+    const next = autoLabel(pizza, state.name);
+    const preset = matchingPreset(pizza)?.id ?? null;
+    if (pizza.label === next && (pizza.preset ?? null) === preset) continue;
+    pizza.label = next;
+    pizza.preset = preset;
+    try {
+      await api(`/api/me/pizzas/${pizza.id}`, { method: 'PUT', token: true, body: payload(pizza) });
+    } catch {
+      /* la lista mostra comunque il nome ricalcolato */
+    }
+  }
 }
 
 void init();
