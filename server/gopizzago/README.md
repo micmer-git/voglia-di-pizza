@@ -17,7 +17,13 @@ Servono tre variabili d'ambiente:
 - `CLOUDFLARE_ACCOUNT_ID`
 - `ADMIN_PIN` — PIN del forno, almeno 6 caratteri (non finisce nel git)
 
-Poi, dalla cartella `server/gopizzago`:
+Per pubblicare un aggiornamento del forno già creato (lista pubblica, niente PIN in lettura, via l’ospite `TEST agente`):
+
+```bash
+cd server/gopizzago && npx wrangler d1 migrations apply gopizzago --remote && npx wrangler deploy
+```
+
+Poi, dalla cartella `server/gopizzago`, la prima volta:
 
 ```bash
 npm run deploy

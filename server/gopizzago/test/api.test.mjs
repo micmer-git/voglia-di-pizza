@@ -73,7 +73,7 @@ test('flusso ospiti, pizze, spesa e forno', { concurrency: false }, async () => 
   const ings = await api('/api/ingredients');
   assert.equal(ings.status, 200);
   const pomodoro = ings.data.ingredients.find((i) => i.id === 'pomodoro');
-  assert.equal(pomodoro.name, 'Pomodoro (pelati)');
+  assert.equal(pomodoro.name, 'Pomodoro');
   assert.equal(pomodoro.role, 'base-rossa');
   assert.equal(ings.data.ingredients.filter((i) => i.role === 'topping').length, 10);
 
@@ -167,17 +167,21 @@ test('flusso ospiti, pizze, spesa e forno', { concurrency: false }, async () => 
   const badPin = await api('/api/admin/overview', { pin: 'sbagliato' });
   assert.equal(badPin.status, 401);
 
+  const publicOrders = await api('/api/orders', { pin: '' });
+  assert.equal(publicOrders.status, 200);
+  assert.match(publicOrders.data.shopping.text, /Mozzarella — 3 pizze · circa 300 g/);
+
   const dash = await api('/api/admin/overview', { pin: 'forno-di-prova' });
   assert.equal(dash.status, 200);
   assert.equal(dash.data.shopping.pizzaCount, 3);
   assert.equal(dash.data.shopping.guestCount, 3);
   const text = dash.data.shopping.text;
   assert.match(text, /3 persone · 3 pizze/);
-  assert.match(text, /Pomodoro \(pelati\) — 2 pizze · circa 120 g/);
+  assert.match(text, /Pomodoro — 2 pizze · circa 120 g/);
   assert.match(text, /Mozzarella — 3 pizze · circa 300 g/);
-  assert.match(text, /Salamino piccante — 1 pizza · circa 20 g/);
+  assert.match(text, /Salamino — 1 pizza · circa 20 g/);
   assert.match(text, /Funghi porcini — 1 pizza · circa 20 g/);
-  assert.match(text, /Gorgonzola \(zola\) — 1 pizza · circa 40 g/);
+  assert.match(text, /Zola — 1 pizza · circa 40 g/);
   assert.match(text, /Grana — 1 pizza · circa 15 g/);
   assert.match(text, /Base bianca — 1,5 pizze · olio extravergine, a occhio/);
   assert.match(text, /come sopra ma senza cipolla/);
@@ -265,6 +269,12 @@ test('flusso ospiti, pizze, spesa e forno', { concurrency: false }, async () => 
   assert.equal(del.status, 200);
   const afterDel = await api('/api/me', { token: marco.data.editToken });
   assert.equal(afterDel.status, 401);
+
+  const ghost = await api('/api/guests', { method: 'POST', body: { name: 'TEST agente' } });
+  assert.equal(ghost.status, 201);
+  const cleaned = await api('/api/orders');
+  assert.equal(cleaned.status, 200);
+  assert.equal(cleaned.data.guests.some((guest) => guest.name === 'TEST agente'), false);
 });
 
 test('rate limit sulle scritture', { concurrency: false }, async () => {

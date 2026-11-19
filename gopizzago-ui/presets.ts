@@ -17,5 +17,4 @@ export const PRESETS: Preset[] = [
   { id: 'ortolana', name: 'Ortolana', base: 'rossa', baseNote: '', toppings: ['mozzarella', 'funghi', 'carciofi', 'cipolle', 'pomodorini'] },
   { id: 'quattro', name: '4 formaggi', base: 'bianca', baseNote: '', toppings: ['mozzarella', 'gorgonzola', 'grana'] },
   { id: 'porcini', name: 'Porcini', base: 'bianca', baseNote: '', toppings: ['mozzarella', 'funghi', 'grana'] },
-  { id: 'pesto', name: 'Pesto e pomodorini', base: 'altro', baseNote: 'pesto', toppings: ['mozzarella', 'pomodorini'] },
 ];
