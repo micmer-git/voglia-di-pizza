@@ -93,7 +93,7 @@ export function parseHalf(raw: unknown, allowedIds: Set<string>): Half {
   const baseNote = cleanText(typeof o.baseNote === 'string' ? o.baseNote : '', 40);
   if (baseNote === null) throw new HttpError(400, 'Il nome della base è troppo lungo');
   if (o.base === 'altro' && baseNote.length === 0) {
-    throw new HttpError(400, 'Scrivi che base è, per esempio pesto');
+    throw new HttpError(400, 'Scrivi come si chiama la base');
   }
   if (!Array.isArray(o.toppingIds)) throw new HttpError(400, 'Condimenti non validi');
   if (o.toppingIds.length > 16) throw new HttpError(400, 'Troppi condimenti su una metà');

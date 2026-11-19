@@ -89,6 +89,10 @@ async function route(request: Request, env: Env, origin: string | null, path: st
   if (method === 'GET' && path === '/api/ingredients') {
     return json({ ingredients: (await loadIngredients(env)).map(mapIng) }, 200, origin);
   }
+  if (method === 'GET' && (path === '/api/orders' || path === '/api/overview')) {
+    await forgetEmptyTestGuest(env);
+    return json(await overview(env), 200, origin);
+  }
   if (method === 'POST' && path === '/api/guests') {
     return createGuest(request, env, origin);
   }
@@ -419,6 +423,12 @@ async function requireGuest(request: Request, env: Env): Promise<GuestRow> {
   const row = await env.DB.prepare('SELECT * FROM guests WHERE token_hash = ?').bind(hash).first<GuestRow>();
   if (!row) throw new HttpError(401, 'Link personale non valido');
   return row;
+}
+
+async function forgetEmptyTestGuest(env: Env): Promise<void> {
+  await env.DB.prepare(
+    `DELETE FROM guests WHERE name = 'TEST agente' AND id NOT IN (SELECT guest_id FROM pizzas)`,
+  ).run();
 }
 
 async function requireAdmin(request: Request, env: Env): Promise<void> {

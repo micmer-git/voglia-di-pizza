@@ -50,4 +50,8 @@ export const SCHEMA_STATEMENTS: string[] = [
     ('salamino', 'Salamino piccante', 'g', 40, 'coin', '#d6453d', 'topping', 90, 1),
     ('grana', 'Grana', 'g', 15, 'shaving', '#f0d78c', 'topping', 100, 1),
     ('cipolle', 'Cipolle', 'g', 30, 'onion', '#c45c9a', 'topping', 110, 1)`,
+  `UPDATE ingredients SET name = 'Pomodoro' WHERE id = 'pomodoro'`,
+  `UPDATE ingredients SET name = 'Zola' WHERE id = 'gorgonzola'`,
+  `UPDATE ingredients SET name = 'Salamino' WHERE id = 'salamino'`,
+  `DELETE FROM guests WHERE name = 'TEST agente' AND id NOT IN (SELECT guest_id FROM pizzas)`,
 ];

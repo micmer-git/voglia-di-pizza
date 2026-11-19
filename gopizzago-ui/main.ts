@@ -4,6 +4,7 @@ import { PRESETS, type Preset } from './presets';
 import type { Half, Ingredient, Pizza } from './types';
 
 const TOKEN_KEY = 'gopizzago.token';
+const STORY_KEY = 'gopizzago.story';
 const LOCAL_KEY = 'gopizzago.local';
 const PIN_KEY = 'gopizzago.pin';
 
@@ -75,6 +76,9 @@ const state: {
   busy: boolean;
   toast: string;
   pending: string;
+  story: boolean;
+  storyStep: number;
+  ordersNote: string;
 } = {
   screen: 'loading',
   apiBase: '',
@@ -95,9 +99,13 @@ const state: {
   busy: false,
   toast: '',
   pending: '',
+  story: false,
+  storyStep: 0,
+  ordersNote: '',
 };
 
 let frame = { entrance: false, freshIds: [] as string[] };
+let swiped = false;
 let toastTimer = 0;
 let bound = false;
 
@@ -271,8 +279,22 @@ function activeToppings(): Ingredient[] {
   return state.ingredients.filter((i) => i.role === 'topping' && (i.active || selected.has(i.id)));
 }
 
+const LIST_NAMES: Record<string, string> = {
+  pomodoro: 'Pomodoro',
+  mozzarella: 'Mozzarella',
+  olive: 'Olive',
+  prosciutto: 'Prosciutto',
+  funghi: 'Funghi porcini',
+  carciofi: 'Carciofi',
+  pomodorini: 'Pomodorini',
+  gorgonzola: 'Zola',
+  salamino: 'Salamino',
+  grana: 'Grana',
+  cipolle: 'Cipolle',
+};
+
 function toppingName(id: string): string {
-  return state.ingredients.find((i) => i.id === id)?.name || id;
+  return LIST_NAMES[id] || state.ingredients.find((i) => i.id === id)?.name || id;
 }
 
 function joinIt(items: string[]): string {
@@ -414,20 +436,54 @@ function shell(): string {
       <div class="brand"><span class="logo-mark">GO</span><span><strong>PizzaGo</strong><em>pizza dell’amicizia</em></span></div>
       <nav class="nav">
         <a href="../">Sito</a>
-        ${state.screen === 'admin' ? '<button class="ghost" type="button" data-action="leave-admin">Le pizze</button>' : '<button class="ghost" type="button" data-action="open-admin">Forno</button>'}
+        <a href="#tutti">Tutti</a>
         ${state.token || state.name ? '<button class="ghost" type="button" data-action="logout">Esci</button>' : ''}
       </nav>
     </header>
+    ${state.story ? storyOverlay() : ''}
     <div id="view">${view()}</div>
     <p class="foot">Forno di Michele · lancia i condimenti</p>
     <div id="toast" class="toast" role="status" ${state.toast ? '' : 'hidden'}></div>
   </div>`;
 }
 
+const STORIES = [
+  { kicker: '1 · Benvenuto', title: 'Pizza dell’amicizia', text: 'Michele accende il forno. Stasera ognuno si fa la sua, senza app e senza PIN.' },
+  { kicker: '2 · La base', title: 'Rossa o bianca', text: 'Scegli la base. Il disco gira e la pizza cambia faccia sotto le mani.' },
+  { kicker: '3 · I condimenti', title: 'Lanciali sopra', text: 'Olive, zola, porcini, cipolle. Cadono sulla pizza. Il pesto non c’è: non l’abbiamo.' },
+  { kicker: '4 · Il tavolo', title: 'Si vede tutto', text: 'Salva e scorri: le pizze di tutti e lo scontrino della spesa, in chiaro.' },
+];
+
+function storyOverlay(): string {
+  const step = Math.min(state.storyStep, STORIES.length - 1);
+  const card = STORIES[step];
+  const bars = STORIES.map((_, i) => `<span class="${i < step ? 'done' : ''} ${i === step ? 'on' : ''}"></span>`).join('');
+  return `<section class="story" aria-label="Introduzione">
+    <div class="bars" aria-hidden="true">${bars}</div>
+    <div class="story-body">
+      <p class="story-kicker">${esc(card.kicker)}</p>
+      <h2>${esc(card.title)}</h2>
+      <p>${esc(card.text)}</p>
+      <div class="story-actions">
+        <button type="button" class="ghost" data-action="story-skip">Salta</button>
+        <button type="button" class="btn" data-action="story-next">${step === STORIES.length - 1 ? 'Si parte' : 'Avanti'}</button>
+      </div>
+    </div>
+    <div class="story-hit">
+      <button type="button" data-action="story-prev" aria-label="Indietro"></button>
+      <button type="button" data-action="story-next" aria-label="Avanti"></button>
+    </div>
+  </section>`;
+}
+
+function endStory() {
+  state.story = false;
+  lsSet(STORY_KEY, '1');
+  paint();
+}
+
 function view(): string {
   if (state.screen === 'loading') return loadingView();
-  if (state.screen === 'gate') return gateView();
-  if (state.screen === 'admin') return adminView();
   return builderView();
 }
 
@@ -465,6 +521,14 @@ function builderView(): string {
         ? 'Inforna di nuovo'
         : 'Inforna per Michele';
   return `<section class="builder">
+    ${state.token ? '' : `<form class="panel name-card" data-action="enter">
+      <h2>Come ti chiami?</h2>
+      <p class="hint">Un nome basta. Niente password.</p>
+      <label class="field"><span>Il tuo nome</span>
+        <input id="f-name" data-field="gate-name" name="nome" autocomplete="name" autocapitalize="words" maxlength="40" placeholder="Per esempio Giulia" value="${esc(state.name)}" required>
+      </label>
+      <button class="btn" type="submit">Sono dei vostri</button>
+    </form>`}
     <div class="stage-wrap">
       <div class="stage">${svg(draft, `live-${draft.id}`, true)}<p class="caption">${esc(describe(draft))}</p></div>
     </div>
@@ -486,10 +550,47 @@ function builderView(): string {
           ${exists ? `<button class="ghost" type="button" data-action="delete-pizza" data-id="${esc(draft.id)}">${state.pending === `pizza:${draft.id}` ? 'Confermi?' : 'Elimina'}</button>` : ''}
         </div>
         <div class="link-row">
-          ${state.token ? `<button class="ghost" type="button" data-action="copy-link">Copia il link segreto</button><p class="hint">Il link è la tua chiave, senza password. Chi lo ha può modificare le tue pizze.</p>` : '<p class="hint">Resta sul telefono finché il forno comune non si accende.</p>'}
+          ${state.token ? `<button class="ghost" type="button" data-action="copy-link">Copia il link segreto</button><p class="hint">Il link è la tua chiave, senza password. Chi lo ha può modificare le tue pizze.</p>` : state.online ? '<p class="hint">Scrivi il nome e inforna: la pizza la vedono tutti.</p>' : '<p class="hint">Resta sul telefono finché il forno comune non si accende.</p>'}
         </div>
       </div>
     </div>
+    ${ordersSection()}
+  </section>`;
+}
+
+function ordersSection(): string {
+  const shop = state.overview?.shopping;
+  const guests = state.overview?.guests ?? [];
+  const lineName = (id: string, fallback: string) => {
+    const nice = toppingName(id);
+    return nice === id ? fallback : nice;
+  };
+  return `<section class="orders" id="tutti">
+    <h2>Tutte le pizze</h2>
+    ${state.ordersNote ? `<p class="banner">${esc(state.ordersNote)}</p>` : ''}
+    ${shop ? `<div class="panel">
+      <div class="receipt-top"><h2>Scontrino</h2><span class="stamp">SPESA</span></div>
+      <div class="mega">
+        <div><strong>${shop.pizzaCount}</strong><span>${shop.pizzaCount === 1 ? 'pizza' : 'pizze'}</span></div>
+        <div><strong>${shop.guestCount}</strong><span>${shop.guestCount === 1 ? 'amico' : 'amici'}</span></div>
+      </div>
+      <div class="receipt">
+        ${shop.lines.length ? `<ul class="shop">${shop.lines.map((line) => `<li><strong>${esc(lineName(line.id, line.name))}</strong><span>${esc(lineMeta(line))}</span></li>`).join('')}</ul>` : '<p class="hint">Nessuno ha ancora ordinato. Il forno fischia.</p>'}
+        ${shop.notes.length ? `<ul class="shop">${shop.notes.map((note) => `<li><strong>${esc(note.guest)}</strong><span>${esc(`${note.pizza}: ${note.notes}`)}</span></li>`).join('')}</ul>` : ''}
+        <p class="receipt-end">tutti vedono tutto</p>
+      </div>
+      <div class="row-actions">
+        <button class="btn" type="button" data-action="copy-shop">Copia scontrino</button>
+        <button class="ghost" type="button" data-action="download-shop">Scarica .txt</button>
+        <button class="ghost" type="button" data-action="refresh">Aggiorna</button>
+      </div>
+    </div>
+    <div class="panel">
+      ${guests.length === 0 ? '<p class="hint">Il tavolo è ancora vuoto.</p>' : guests.map((guest) => `<article class="guest">
+        <div class="guest-head"><strong>${esc(guest.name)}</strong></div>
+        ${guest.pizzas.length === 0 ? '<p class="hint">Nessuna pizza.</p>' : guest.pizzas.map((pizza) => `<div class="mini-pizza">${svg(normalizePizza(pizza), `ord-${pizza.id}`, false)}<div><strong>${esc(pizza.label || 'Pizza')}</strong><p class="hint">${esc(describe(normalizePizza(pizza)))}</p>${pizza.notes ? `<p class="hint">${esc(pizza.notes)}</p>` : ''}</div></div>`).join('')}
+      </article>`).join('')}
+    </div>` : ''}
   </section>`;
 }
 
@@ -520,8 +621,8 @@ function halfEditor(side: 'left' | 'right', title: string): string {
     <div class="bases" role="group" aria-label="Base ${esc(title)}">
       ${(['rossa', 'bianca', 'altro'] as const).map((base) => `<button type="button" class="base-btn" data-action="set-base" data-half="${side}" data-base="${base}" aria-pressed="${half.base === base}">${base === 'rossa' ? 'Rossa' : base === 'bianca' ? 'Bianca' : 'Altro'}</button>`).join('')}
     </div>
-    ${half.base === 'altro' ? `<label class="field"><span>Quale base?</span><input id="${noteId}" data-field="base-note-${side}" maxlength="40" placeholder="es. pesto" value="${esc(half.baseNote)}"></label>` : ''}
-    <div class="chips">${activeToppings().map((ing) => `<button type="button" class="chip" data-action="toggle-topping" data-half="${side}" data-id="${esc(ing.id)}" aria-pressed="${half.toppingIds.includes(ing.id)}">${chipIcon(ing.shape, ing.color)}<span>${esc(ing.name)}</span></button>`).join('')}</div>
+    ${half.base === 'altro' ? `<label class="field"><span>Quale base?</span><input id="${noteId}" data-field="base-note-${side}" maxlength="40" placeholder="es. crema" value="${esc(half.baseNote)}"></label>` : ''}
+    <div class="chips">${activeToppings().map((ing) => `<button type="button" class="chip" data-action="toggle-topping" data-half="${side}" data-id="${esc(ing.id)}" aria-pressed="${half.toppingIds.includes(ing.id)}">${chipIcon(ing.shape, ing.color)}<span>${esc(toppingName(ing.id))}</span></button>`).join('')}</div>
   </fieldset>`;
 }
 
@@ -674,6 +775,7 @@ async function saveDraft(asVariant: boolean) {
     state.dirty = false;
     writeLocal();
     toast('Infornata sul telefono');
+    await loadOverview(false);
     paint();
     celebrate();
     return;
@@ -705,6 +807,7 @@ async function saveDraft(asVariant: boolean) {
     toast(err instanceof Error ? err.message : 'Non sono riuscito a salvare');
   } finally {
     state.busy = false;
+    if (cheered) await loadOverview(false);
     paint();
     if (cheered) celebrate();
   }
@@ -731,28 +834,31 @@ async function removePizza(id: string) {
   paint();
 }
 
-async function loadOverview() {
+async function loadOverview(repaint = true) {
+  if (!state.online) {
+    state.overview = null;
+    state.ordersNote = 'Il forno condiviso non è collegato.';
+    if (repaint) paint();
+    return;
+  }
   try {
-    const data = (await api('/api/admin/overview', { admin: true })) as unknown as Overview;
+    const data = (await api('/api/orders')) as unknown as Overview;
     state.overview = {
       ...data,
       ingredients: data.ingredients.map(normalizeIngredient),
       guests: data.guests.map((guest) => ({ ...guest, pizzas: guest.pizzas.map(normalizePizza) })),
     };
-    state.ingredients = state.overview.ingredients;
-    state.adminError = '';
-    sessionStorage.setItem(PIN_KEY, state.adminPin);
+    state.ordersNote = '';
   } catch (err) {
     state.overview = null;
-    if (err instanceof ApiError && err.status === 401) {
-      state.adminPin = '';
-      sessionStorage.removeItem(PIN_KEY);
-      state.adminError = 'PIN non valido';
-    } else {
-      state.adminError = err instanceof Error ? err.message : 'Errore';
-    }
+    state.ordersNote =
+      err instanceof ApiError && (err.status === 404 || err.status === 401)
+        ? 'La lista di tutti arriva appena Michele aggiorna il forno.'
+        : err instanceof Error
+          ? err.message
+          : 'Non riesco a leggere le pizze.';
   }
-  paint();
+  if (repaint) paint();
 }
 
 function applyPreset(id: string) {
@@ -797,6 +903,27 @@ async function onClick(ev: Event) {
   if (!button) return;
   const action = button.dataset.action || '';
   const id = button.dataset.id || '';
+  if (swiped) {
+    swiped = false;
+    return;
+  }
+  if (action === 'story-skip') {
+    endStory();
+    return;
+  }
+  if (action === 'story-next') {
+    if (state.storyStep >= STORIES.length - 1) endStory();
+    else {
+      state.storyStep += 1;
+      paint();
+    }
+    return;
+  }
+  if (action === 'story-prev') {
+    state.storyStep = Math.max(0, state.storyStep - 1);
+    paint();
+    return;
+  }
   if (action !== 'delete-pizza' && action !== 'delete-guest' && action !== 'delete-admin-pizza') state.pending = '';
   if (action === 'open-admin') {
     state.screen = 'admin';
@@ -825,7 +952,7 @@ async function onClick(ev: Event) {
     state.name = '';
     state.pizzas = [];
     state.draft = blankPizza();
-    state.screen = 'gate';
+    state.screen = 'builder';
     paint();
     return;
   }
@@ -1074,6 +1201,27 @@ function bind() {
     const el = ev.target;
     if (el instanceof HTMLElement && el.dataset.field === 'guest-name') void persistName();
   });
+  let swipeX = 0;
+  root?.addEventListener('pointerdown', (ev) => {
+    swiped = false;
+    if (ev.target instanceof Element && ev.target.closest('.story')) swipeX = ev.clientX;
+  });
+  root?.addEventListener('pointerup', (ev) => {
+    if (!state.story || !(ev.target instanceof Element) || !ev.target.closest('.story')) return;
+    const dx = ev.clientX - swipeX;
+    if (Math.abs(dx) < 48) return;
+    swiped = true;
+    if (dx < -48) {
+      if (state.storyStep >= STORIES.length - 1) endStory();
+      else {
+        state.storyStep += 1;
+        paint();
+      }
+    } else if (dx > 48) {
+      state.storyStep = Math.max(0, state.storyStep - 1);
+      paint();
+    }
+  });
 }
 
 async function init() {
@@ -1114,14 +1262,14 @@ async function init() {
         lsDel(TOKEN_KEY);
         state.token = '';
         state.banner = 'Il link personale non è più valido. Entra di nuovo con il tuo nome.';
-        state.screen = 'gate';
+        state.screen = 'builder';
       } else {
         state.online = false;
         state.banner = MSG_DOWN;
         const local = readLocal();
         state.name = local?.name || '';
         state.pizzas = local?.pizzas || [];
-        state.screen = state.name ? 'builder' : 'gate';
+        state.screen = 'builder';
         state.draft = state.pizzas[0] ? structuredClone(state.pizzas[0]) : blankPizza();
       }
     }
@@ -1133,8 +1281,10 @@ async function init() {
       state.draft = local.pizzas[0] ? structuredClone(local.pizzas[0]) : blankPizza();
       state.screen = 'builder';
       state.entrance = true;
-    } else state.screen = 'gate';
-  } else state.screen = 'gate';
+    } else state.screen = 'builder';
+  } else state.screen = 'builder';
+  state.story = lsGet(STORY_KEY) !== '1';
+  await loadOverview(false);
   paint();
 }
 
