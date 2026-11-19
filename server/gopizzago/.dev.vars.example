@@ -1,0 +1,2 @@
+# Copia in .dev.vars per `wrangler dev`. Non committare il PIN vero.
+ADMIN_PIN=cambia-questo-pin

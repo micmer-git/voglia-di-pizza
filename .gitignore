@@ -16,6 +16,13 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+server/gopizzago/.dev.vars
+server/gopizzago/.wrangler
+
+# bundle GoPizzaGo (generato da npm run build)
+public/gopizzago/app.js
+public/gopizzago/app.css
+gopizzago-ui/dist
 
 # macOS-specific files
 .DS_Store

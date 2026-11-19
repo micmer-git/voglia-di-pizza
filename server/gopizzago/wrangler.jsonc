@@ -1,0 +1,19 @@
+{
+  // GoPizzaGo — pizze dell'amicizia. Deploy: npm run deploy (vedi README).
+  "name": "gopizzago",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gopizzago",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://micmer-git.github.io,https://voglia-di-pizza.pages.dev,http://localhost:4321,http://127.0.0.1:4321,http://localhost:4322,http://127.0.0.1:4322,http://localhost:4173,http://127.0.0.1:4173"
+  }
+}

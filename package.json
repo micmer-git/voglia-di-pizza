@@ -6,13 +6,17 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "node scripts/build-gopizzago.mjs && astro dev",
+    "build": "node scripts/build-gopizzago.mjs && astro build",
     "preview": "astro preview",
+    "test": "node scripts/build-gopizzago.mjs && node --test gopizzago-ui/test/*.test.mjs && npm test --prefix server/gopizzago",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.1",
     "astro": "^6.0.8"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }
